@@ -8,9 +8,9 @@ async function runMigrations() {
 
   try {
     await pool.query(sql);
-    console.log('✅ Migration ran successfully');
+    console.log('✅ SQL processing succeeded.');
   } catch (error) {
-    console.error('❌ Failed to run migration:', error);
+    console.error('❌ Failed to process SQL', error);
   } finally {
     await pool.end();
   }
