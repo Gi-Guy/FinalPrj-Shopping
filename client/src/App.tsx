@@ -34,9 +34,12 @@
 
 // export default App
 
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Layout from './components/Layout';
+import UserProfile from './components/UserProfile';
 import { useEffect, useState } from 'react';
 
-function App() {
+function HomePage() {
   const [ping, setPing] = useState('');
 
   useEffect(() => {
@@ -47,11 +50,24 @@ function App() {
   }, []);
 
   return (
-    <div>
+    <div style={{ padding: '2rem', color: 'white' }}>
       <h1>Ping Test</h1>
       <p>Server says: {ping}</p>
     </div>
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<HomePage />} />
+          <Route path="/profile" element={<UserProfile />} />
+        </Route>
+      </Routes>
+    </Router>
+  );
+}
+
+
