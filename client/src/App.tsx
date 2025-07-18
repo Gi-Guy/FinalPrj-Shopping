@@ -35,6 +35,7 @@
 // export default App
 
 import { useEffect, useState } from 'react';
+import { AppRouter } from './router';
 
 function App() {
   const [ping, setPing] = useState('');
@@ -47,10 +48,10 @@ function App() {
   }, []);
 
   return (
-    <div>
-      <h1>Ping Test</h1>
+    <>
       <p>Server says: {ping}</p>
-    </div>
+      <AppRouter />
+    </>
   );
 }
 
