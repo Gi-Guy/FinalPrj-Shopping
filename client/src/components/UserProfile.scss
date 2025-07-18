@@ -1,48 +1,51 @@
-.profile-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #1e1e1e, #121212);
-  color: white;
-}
-
-.profile-card {
-  background: #1f1f1f;
-  padding: 2.5rem;
-  border-radius: 16px;
-  max-width: 400px;
-  width: 100%;
-  text-align: center;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
-  transition: transform 0.3s ease;
-}
-
-.profile-card:hover {
-  transform: translateY(-5px);
-}
-
-.avatar {
-  width: 130px;
-  height: 130px;
-  border-radius: 50%;
-  margin-bottom: 1rem;
-  border: 3px solid #03dac6;
-  object-fit: cover;
-}
-
-.bio {
-  margin-top: 1rem;
-  font-style: italic;
-  color: #b0b0b0;
-}
-
 .profile-card p {
   margin: 0.5rem 0;
+  line-height: 1.4;
 }
 
-.profile-card input[type="file"] {
-  margin: 0.5rem 0;
+.profile-card input[type='file'] {
+  margin: 0.5rem 0 1rem;
   color: white;
+}
+
+.profile-card input,
+.profile-card textarea {
+  width: 100%;
+  padding: 0.6rem;
+  margin: 0.5rem 0;
+  border-radius: 6px;
+  border: none;
+  background: #2e2e2e;
+  color: white;
+  font-size: 1rem;
+}
+
+.profile-card textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.button-group {
+  display: flex;
+  flex-direction: column; 
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.profile-card button {
+  padding: 0.6rem 1.2rem;
+  width: 100%;
+  max-width: 200px;
+  border: none;
+  background-color: #03dac6;
+  color: #121212;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.profile-card button:hover {
+  background-color: #00b3a0;
 }

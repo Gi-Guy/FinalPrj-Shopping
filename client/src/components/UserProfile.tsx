@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './UserProfile.scss';
+import { useNavigate } from 'react-router-dom';
 
 interface User {
   name: string;
@@ -10,42 +11,62 @@ interface User {
 }
 
 export default function UserProfile() {
-  const [user, setUser] = useState<User>({
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    location: 'New York, USA',
-    bio: 'Web developer who loves coffee and coding.',
-    avatar: 'https://i.pravatar.cc/150?img=3',
-  });
-
+  const [user, setUser] = useState<User | null>(null);
+  const [tempUser, setTempUser] = useState<User | null>(null);
   const [editMode, setEditMode] = useState(false);
-  const [tempUser, setTempUser] = useState<User>(user);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    fetch('http://localhost:3001/api/user/1')
+      .then(res => res.json())
+      .then(data => {
+        setUser(data);
+        setTempUser(data);
+      });
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setTempUser(prev => ({ ...prev, [name]: value }));
+    if (!tempUser) return;
+    setTempUser(prev => ({ ...prev!, [name]: value }));
   };
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setTempUser(prev => ({ ...prev, avatar: reader.result as string }));
-      };
-      reader.readAsDataURL(file);
-    }
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setTempUser(prev => ({ ...prev!, avatar: reader.result as string }));
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleSave = () => {
-    setUser(tempUser);
-    setEditMode(false);
+    if (!tempUser) return;
+    fetch('http://localhost:3001/api/user/1', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(tempUser),
+    })
+      .then(res => res.json())
+      .then(data => {
+        setUser(data);
+        setTempUser(data);
+        setEditMode(false);
+      });
   };
 
   const handleCancel = () => {
     setTempUser(user);
     setEditMode(false);
   };
+
+  const handleCreatePost = () => {
+    navigate('/create-post');
+  };
+
+  if (!user || !tempUser) return <div className="profile-container">Loading...</div>;
 
   return (
     <div className="profile-container">
@@ -54,11 +75,8 @@ export default function UserProfile() {
 
         {editMode ? (
           <>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleAvatarChange}
-            />
+            <input type="file" accept="image/*" onChange={handleAvatarChange} />
+
             <input
               type="text"
               name="name"
@@ -98,6 +116,7 @@ export default function UserProfile() {
             <p><strong>Location:</strong> {user.location}</p>
             <p className="bio">{user.bio}</p>
             <button onClick={() => setEditMode(true)}>✏ Edit</button>
+            <button onClick={handleCreatePost}>📝 Create Post</button>
           </>
         )}
       </div>
