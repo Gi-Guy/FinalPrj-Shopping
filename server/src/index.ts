@@ -1,34 +1,23 @@
-import express from 'express';
+import app from './app';
+import pool from './db';
 import dotenv from 'dotenv';
-import cors from 'cors';
-import pg from 'pg';
 
-dotenv.config({ path: './env/.env' });
+dotenv.config({ path: './src/.env' });
 
-const app = express();
 const PORT = process.env.PORT || 3001;
 
-app.use(cors());
-app.use(express.json());
+async function startServer() {
+  try {
+    await pool.query('SELECT 1'); 
+    console.log('🟢 Connected to PostgreSQL');
 
-const { Pool } = pg;
-const pool = new Pool({
-  user: process.env.PG_USER,
-  host: process.env.PG_HOST,
-  database: process.env.PG_DATABASE,
-  password: process.env.PG_PASSWORD,
-  port: Number(process.env.PG_PORT),
-  ssl: process.env.PG_SSL === 'true',
-});
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running at http://localhost:${PORT}`);
+    });
+  } catch (error) {
+    console.error('🔴 Failed to connect to DB:', error);
+    process.exit(1);
+  }
+}
 
-pool.connect()
-  .then(() => console.log('Connected to PostgreSQL DB'))
-  .catch(err => console.error('DB connection error:', err));
-
-app.get('/', (_, res) => {
-  res.send('Server running');
-});
-
-app.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
-});
+startServer();
