@@ -33,7 +33,7 @@
 // }
 
 // export default App
-
+import React from 'react';
 import { useEffect, useState } from 'react';
 import { AppRouter } from './router';
 
