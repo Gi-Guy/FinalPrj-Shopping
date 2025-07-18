@@ -4,3 +4,12 @@ CREATE TABLE IF NOT EXISTS test_table (
   name TEXT NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE IF NOT EXISTS users (
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  email TEXT UNIQUE NOT NULL,
+  location TEXT,
+  bio TEXT,
+  avatar TEXT
+);
