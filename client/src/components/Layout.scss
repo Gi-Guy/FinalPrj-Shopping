@@ -1,0 +1,75 @@
+.layout-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-header {
+  background: #03dac6;
+  color: #121212;
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  padding: 1rem 0;
+}
+
+.app-nav {
+  background: #1e1e1e;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  padding: 1rem 0;
+}
+
+.app-nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.app-nav a:hover {
+  color: #03dac6;
+}
+
+.main-content {
+  flex: 1;
+  background-color: #121212;
+}
+.profile-card input,
+.profile-card textarea {
+  width: 100%;
+  padding: 0.6rem;
+  margin: 0.4rem 0;
+  border-radius: 6px;
+  border: none;
+  background: #2e2e2e;
+  color: white;
+}
+
+.profile-card textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.profile-card button {
+  padding: 0.5rem 1rem;
+  border: none;
+  background-color: #03dac6;
+  color: #121212;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.profile-card button:hover {
+  background-color: #00b3a0;
+}
