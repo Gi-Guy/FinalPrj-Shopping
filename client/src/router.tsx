@@ -3,6 +3,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import CreateShopForm from './pages/CreateShopForm';
 import ShopPage from './pages/ShopPage';
 import CreateCategoryPage from './pages/CreateCategoryPage';
+import NotFoundPage from './pages/NotFoundPage';
 
 export const router = createBrowserRouter([
   {
@@ -16,6 +17,10 @@ export const router = createBrowserRouter([
     {
     path: '/create-category',
     element: <CreateCategoryPage />
+  },
+    {
+    path: '*',
+    element: <NotFoundPage />
   }
 ]);
 
