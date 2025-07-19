@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import pool from './db'; // make sure this exports your pg Pool instance
 import shopRoutes from './routers/shops';
+import categoryRoutes from './routers/categories';
 
 const app = express();
 
@@ -9,6 +10,8 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api/shops', shopRoutes);
+app.use('/api/categories', categoryRoutes);
+// health check endpoint for testing only
 app.get('/api/health', (_, res) => {
   res.send({ status: 'OK' });
 });

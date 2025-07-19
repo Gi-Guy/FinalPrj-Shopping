@@ -8,6 +8,8 @@ import {
   updateShopHoursById
 } from '../models/shopModel';
 
+import { createDefaultCategory } from '../models/categoryModel';
+
 function generateSlug(name: string): string {
   return name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9\-]/g, '');
 }
@@ -27,6 +29,9 @@ export async function handleCreateShop(req: Request, res: Response) {
 
   try {
     const newShop = await createShop(name, description, slug, ownerId, location, workingHours);
+
+    await createDefaultCategory(newShop.id);
+
     res.status(201).json(newShop);
   } catch (err) {
     console.error('Error creating shop:', err);
