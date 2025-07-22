@@ -8,6 +8,11 @@ import {
   updateShopHoursById
 } from '../models/shopModel';
 
+import {
+  findUserById,
+  updateUserById
+} from '../models/userModel';
+
 import { createDefaultCategory } from '../models/categoryModel';
 
 function generateSlug(name: string): string {
@@ -21,6 +26,11 @@ export async function handleCreateShop(req: Request, res: Response) {
     return res.status(400).json({ error: 'Missing name or ownerId' });
   }
 
+  const user = await findUserById(ownerId);
+  if (!user) {
+    return res.status(404).json({ error: 'Owner user not found' });
+  }
+
   const slug = generateSlug(name);
   const existing = await findShopBySlug(slug);
   if (existing) {
@@ -29,6 +39,11 @@ export async function handleCreateShop(req: Request, res: Response) {
 
   try {
     const newShop = await createShop(name, description, slug, ownerId, location, workingHours);
+
+    await updateUserById(ownerId, {
+      shop_id: newShop.id,
+      is_seller: true
+    });
 
     await createDefaultCategory(newShop.id);
 
