@@ -104,3 +104,14 @@ export async function updateUserShopStatus(userId: number, shopId: number, isSel
   );
   return result.rows[0];
 }
+// update password 
+export async function updateUserPassword(userId: number, newPassword: string) {
+  const result = await db.query(
+    `UPDATE users 
+     SET password_hash = $1 
+     WHERE id = $2 
+     RETURNING *`,
+    [newPassword, userId]
+  );
+  return result.rows[0];
+}

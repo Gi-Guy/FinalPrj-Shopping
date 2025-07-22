@@ -7,7 +7,8 @@ import {
   toggleUserSellerStatus,
   updateLastLogin,
   deactivateUser,
-  getShopByUserId 
+  getShopByUserId,
+  updateUserPassword
 } from '../models/userModel';
 
 export async function handleCreateUser(req: Request, res: Response) {
@@ -123,6 +124,24 @@ export async function handleDeleteUser(req: Request, res: Response) {
     res.status(204).send();
   } catch (err) {
     console.error('Error deleting user:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+}
+// update password with bcrypt
+export async function handleUpdateUserPassword(req: Request, res: Response) { 
+  const { id } = req.params;
+  const { newPassword } = req.body;
+
+  if (!newPassword) {
+    return res.status(400).json({ error: 'New password is required' });
+  }
+
+  try {
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    const updatedUser = await updateUserPassword(Number(id), hashedPassword);
+    res.json(updatedUser);
+  } catch (err) {
+    console.error('Error updating user password:', err);
     res.status(500).json({ error: 'Server error' });
   }
 }

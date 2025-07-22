@@ -5,7 +5,8 @@ import {
   handleToggleSellerStatus,
   handleUpdateLastLogin,
   handleDeactivateUser,
-  handleGetShopByUserId 
+  handleGetShopByUserId,
+  handleUpdateUserPassword
 } from '../controllers/userController';
 
 const router = express.Router();
@@ -16,5 +17,6 @@ router.patch('/:id/seller', handleToggleSellerStatus);
 router.patch('/:id/login', handleUpdateLastLogin);
 router.patch('/:id/deactivate', handleDeactivateUser);
 router.get('/:id/shop', handleGetShopByUserId);
+router.patch('/:id/password', handleUpdateUserPassword);
 
 export default router;
