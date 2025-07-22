@@ -9,6 +9,7 @@ interface CreateUserInput {
   gender?: string;
   phone?: string;
   shop_id?: number | null;
+  is_seller?: boolean | false;
 }
 
 interface UpdateUserInput {
@@ -19,6 +20,7 @@ interface UpdateUserInput {
   gender?: string;
   phone?: string;
   shop_id?: number | null;
+  is_seller?: boolean;
 }
 
 export async function createUser(user: CreateUserInput) {
@@ -91,4 +93,14 @@ export async function getShopByUserId(userId: number) {
   );
 
   return result.rows[0] || null;
+}
+export async function updateUserShopStatus(userId: number, shopId: number, isSeller: boolean) {
+  const result = await db.query(
+    `UPDATE users 
+     SET shop_id = $1, is_seller = $2 
+     WHERE id = $3 
+     RETURNING *`,
+    [shopId, isSeller, userId]
+  );
+  return result.rows[0];
 }

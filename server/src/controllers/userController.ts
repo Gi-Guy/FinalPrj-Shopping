@@ -103,3 +103,17 @@ export async function handleGetShopByUserId(req: Request, res: Response) {
     res.status(500).json({ error: 'Server error' });
   }
 }
+export async function handleDeleteUser(req: Request, res: Response) {
+  const { id } = req.params;
+
+  try {
+    const user = await findUserById(Number(id));
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    await deactivateUser(Number(id));
+    res.status(204).send();
+  } catch (err) {
+    console.error('Error deleting user:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+}
