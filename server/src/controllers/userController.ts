@@ -1,3 +1,4 @@
+import bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
 import {
   createUser,
@@ -12,7 +13,7 @@ import {
 export async function handleCreateUser(req: Request, res: Response) {
   const {
     username, email, first_name, last_name,
-    password_hash, gender, phone, shop_id
+    password_hash, gender, phone
   } = req.body;
 
   if (!username || !email || !password_hash) {
@@ -20,11 +21,19 @@ export async function handleCreateUser(req: Request, res: Response) {
   }
 
   try {
-    const user = await createUser({
-      username, email, first_name, last_name,
-      password_hash, gender, phone, shop_id
+    const hashedPassword = await bcrypt.hash(password_hash, 10);
+
+    const newUser = await createUser({
+      username,
+      email,
+      first_name,
+      last_name,
+      password_hash: hashedPassword,
+      gender,
+      phone
     });
-    res.status(201).json(user);
+
+    res.status(201).json(newUser);
   } catch (err) {
     console.error('Error creating user:', err);
     res.status(500).json({ error: 'Server error' });
