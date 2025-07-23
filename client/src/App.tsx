@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { AppRouter } from './router';
 
 function App() {
-  const [ping, setPing] = useState('');
+  const [, setPing] = useState('');
 
   useEffect(() => {
     fetch('http://localhost:3001/api/ping')
