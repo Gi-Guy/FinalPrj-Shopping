@@ -1,14 +1,19 @@
-import { Link, Outlet } from 'react-router-dom';
+import React from 'react';
+import { NavLink, Outlet } from 'react-router-dom';
 import './Layout.scss';
 
 export default function Layout() {
   return (
     <div className="layout-container">
       <header className="app-header">Final Project</header>
+
       <nav className="app-nav">
-        <Link to="/">Home</Link>
-        <Link to="/profile">User Profile</Link>
+        <NavLink to="/" end>Home</NavLink>
+        <NavLink to="/profile">User Profile</NavLink>
+        <NavLink to="/create-shop">Create Shop</NavLink>
+        <NavLink to="/create-category">Create Category</NavLink>
       </nav>
+
       <main className="main-content">
         <Outlet />
       </main>

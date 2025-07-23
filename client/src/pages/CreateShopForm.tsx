@@ -3,6 +3,8 @@ import { useState } from 'react';
 import Input from '../components/Input';
 import TextArea from '../components/TextArea';
 import Button from '../components/Button';
+import '../components/CreateShopForm.scss';
+
 
 export default function CreateShopForm() {
   const [form, setForm] = useState({
