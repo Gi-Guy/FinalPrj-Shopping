@@ -12,6 +12,8 @@ export default function Layout() {
         <NavLink to="/profile">User Profile</NavLink>
         <NavLink to="/create-shop">Create Shop</NavLink>
         <NavLink to="/create-category">Create Category</NavLink>
+        <NavLink to="/register">register</NavLink>
+        <NavLink to="/login">Login</NavLink>
       </nav>
 
       <main className="main-content">
