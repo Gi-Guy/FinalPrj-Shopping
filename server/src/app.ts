@@ -1,19 +1,24 @@
 import express from 'express';
 import cors from 'cors';
-import pool from './db'; // make sure this exports your pg Pool instance
+import pool from './db';
+
 import shopRoutes from './routers/shops';
 import categoryRoutes from './routers/categories';
 import userRoutes from './routers/users';
 import productRoutes from './routers/products';
+import messageRoutes from './routers/messages'; 
+
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+
 app.use('/api/shops', shopRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/users', userRoutes);
-
 app.use('/api/products', productRoutes);
+app.use('/api/messages', messageRoutes); 
+
 // health check endpoint for testing only
 app.get('/api/health', (_, res) => {
   res.send({ status: 'OK' });
