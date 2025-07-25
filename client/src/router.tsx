@@ -12,8 +12,8 @@ import CreateShopForm from './pages/CreateShopForm';
 import ShopPage from './pages/ShopPage';
 import CreateCategoryPage from './pages/CreateCategoryPage';
 import NotFoundPage from './pages/NotFoundPage';
-import RegisterPage from './pages/RegisterPage';
-import LoginPage from './pages/LoginPage';
+// import RegisterPage from './pages/RegisterPage';
+// import LoginPage from './pages/LoginPage';
 
 const routes: RouteObject[] = [
   {
@@ -26,8 +26,8 @@ const routes: RouteObject[] = [
       { path: 'shops/:slug', element: <ShopPage /> },
       { path: 'create-category', element: <CreateCategoryPage /> },
       { path: '*', element: <NotFoundPage /> },
-      {path: 'register', element: <RegisterPage /> },
-      {path: 'login', element: <LoginPage /> },
+      // {path: 'register', element: <RegisterPage /> },
+      // {path: 'login', element: <LoginPage /> },
     ],
   },
 ];
