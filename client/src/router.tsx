@@ -14,7 +14,7 @@ import CreateCategoryPage from './pages/CreateCategoryPage';
 import NotFoundPage from './pages/NotFoundPage';
 import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
-import ChatPage from './pages/chatPage'; 
+import ChatPage from './pages/ChatPageT'; 
 
 const routes: RouteObject[] = [
   {
