@@ -20,6 +20,7 @@ function generateSlug(name: string): string {
 }
 
 export async function handleCreateShop(req: Request, res: Response) {
+  console.log('Hey im here:', req.body);
   const { name, description, ownerId, location, workingHours } = req.body;
 
   if (!name || !ownerId) {
