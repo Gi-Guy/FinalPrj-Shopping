@@ -17,6 +17,7 @@ function generateSlug(name: string): string {
   return name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9\-]/g, '');
 }
 export async function handleCreateProductByShopId(req: Request, res: Response) {
+  console.log('Creating product by shop ID');
   const {
     name,
     description,
@@ -64,6 +65,7 @@ export async function handleCreateProductByShopId(req: Request, res: Response) {
   }
 }
 export async function handleCreateProduct(req: Request, res: Response) {
+  console.log('Creating product for shop slug');
   const { shopSlug } = req.params;
   const {
     name,

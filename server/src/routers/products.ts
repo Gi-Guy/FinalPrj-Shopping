@@ -11,7 +11,7 @@ import {
 } from '../controllers/productController';
 
 const router = express.Router();
-
+router.post('/', handleCreateProductByShopId);
 router.post('/:id/products', handleCreateProductByShopId);
 router.post('/:shopSlug/products', handleCreateProduct);
 router.get('/:shopSlug/products', handleGetProductsByShop);

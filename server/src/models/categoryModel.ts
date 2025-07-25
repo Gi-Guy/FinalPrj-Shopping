@@ -57,24 +57,14 @@ export async function createDefaultCategory(shopId: number) {
   return await createCategory('All', 'all', shopId, 'Default category');
 }
 
-// export async function reassignProductsToDefaultCategory(oldCategoryId: number, defaultCategoryId: number) {
-//   const query = `
-//     UPDATE products
-//     SET category_id = $1
-//     WHERE category_id = $2;
-//   `;
-//   await db.query(query, [defaultCategoryId, oldCategoryId]);
-// }
-export async function reassignProductsToDefaultCategory(shopId: number, oldCategoryId: number) {
-  const defaultCategory = await getDefaultCategoryForShop(shopId);
-  if (!defaultCategory) throw new Error('Default category not found for shop');
-
-  await db.query(
-    `UPDATE products SET category_id = $1 WHERE category_id = $2`,
-    [defaultCategory.id, oldCategoryId]
-  );
+export async function reassignProductsToDefaultCategory(oldCategoryId: number, defaultCategoryId: number) {
+  const query = `
+    UPDATE products
+    SET category_id = $1
+    WHERE category_id = $2;
+  `;
+  await db.query(query, [defaultCategoryId, oldCategoryId]);
 }
-
 export async function deleteCategory(categoryId: number) {
   await db.query('DELETE FROM categories WHERE id = $1', [categoryId]);
 }
