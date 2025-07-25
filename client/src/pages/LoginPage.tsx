@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import '../components/Auth.scss';
 
-export default function LoginPage() {
-  const [form, setForm] = useState({
-    username: '',
-    password: '',
-  });
+interface LoginResponse {
+  token: string;
+}
 
+export default function LoginPage() {
+  const [form, setForm] = useState({ username: '', password: '' });
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -15,17 +17,34 @@ export default function LoginPage() {
     setForm(prev => ({ ...prev, [name]: value }));
   };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    try {
+      const res = await axios.post<LoginResponse>(`${import.meta.env.VITE_API_URL}/api/auth/login`, form);
+      localStorage.setItem('token', res.data.token);
+      navigate('/');
+    } catch (err) {
+      if (err && typeof err === 'object' && 'response' in err) {
+        const axiosErr = err as { response?: { data?: { message?: string } } };
+        setError(axiosErr.response?.data?.message || 'Login failed');
+      } else {
+        setError('Unexpected error occurred');
+      }
+    }
+  };
+
   return (
     <div className="auth-container">
       <h2>Login</h2>
-      <form>
+      <form onSubmit={handleSubmit}>
         <input type="text" name="username" placeholder="Username" value={form.username} onChange={handleChange} />
         <input type="password" name="password" placeholder="Password" value={form.password} onChange={handleChange} />
         <button type="submit">Login</button>
       </form>
-
+      {error && <p className="error">{error}</p>}
       <div className="auth-alt-action">
-        <span>Dont have an account?</span>
+        <span>Don&#39;t have an account?</span>
         <button onClick={() => navigate('/register')}>Register</button>
       </div>
     </div>

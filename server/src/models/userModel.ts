@@ -115,3 +115,8 @@ export async function updateUserPassword(userId: number, newPassword: string) {
   );
   return result.rows[0];
 }
+
+export async function findUserByUsername(username: string) {
+  const result = await db.query(`SELECT * FROM users WHERE username = $1`, [username]);
+  return result.rows[0] || null;
+}   

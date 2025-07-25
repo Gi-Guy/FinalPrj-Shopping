@@ -127,7 +127,6 @@ export async function handleDeleteUser(req: Request, res: Response) {
     res.status(500).json({ error: 'Server error' });
   }
 }
-// update password with bcrypt
 export async function handleUpdateUserPassword(req: Request, res: Response) { 
   const { id } = req.params;
   const { newPassword } = req.body;
@@ -142,6 +141,19 @@ export async function handleUpdateUserPassword(req: Request, res: Response) {
     res.json(updatedUser);
   } catch (err) {
     console.error('Error updating user password:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+}
+export async function handleGetUserById(req: Request, res: Response) {
+  const { id } = req.params;
+
+  try {
+    const user = await findUserById(Number(id));
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    res.json(user);
+  } catch (err) {
+    console.error('Error fetching user:', err);
     res.status(500).json({ error: 'Server error' });
   }
 }
