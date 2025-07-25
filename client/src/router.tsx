@@ -26,6 +26,8 @@ const routes: RouteObject[] = [
       { path: 'shops/:slug', element: <ShopPage /> },
       { path: 'create-category', element: <CreateCategoryPage /> },
       { path: '*', element: <NotFoundPage /> },
+      {path: 'register', element: <RegisterPage /> },
+      {path: 'login', element: <LoginPage /> },
     ],
   },
 ];
