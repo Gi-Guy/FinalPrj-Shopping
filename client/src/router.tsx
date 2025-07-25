@@ -6,7 +6,7 @@ import {
 import type { RouteObject } from 'react-router-dom';
 
 import Layout from './components/Layout';
-import HomePage from './pages/HomePage';
+//import HomePage from './pages/HomePage';
 import UserProfile from './components/UserProfile';
 import CreateShopForm from './pages/CreateShopForm';
 import ShopPage from './pages/ShopPage';
@@ -20,7 +20,7 @@ const routes: RouteObject[] = [
     path: '/',
     element: <Layout />,
     children: [
-      { index: true, element: <HomePage /> },
+      { index: true, element: <RegisterPage /> },
       { path: 'profile', element: <UserProfile /> },
       { path: 'create-shop', element: <CreateShopForm /> },
       { path: 'shops/:slug', element: <ShopPage /> },
