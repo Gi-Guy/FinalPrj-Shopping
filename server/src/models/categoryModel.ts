@@ -50,7 +50,7 @@ export async function getDefaultCategoryForShop(shopId: number) {
     WHERE shop_id = $1 AND slug = 'all';
   `;
   const result = await db.query(query, [shopId]);
-  return result.rows[0];
+  return result.rows[0] || null;
 }
 
 export async function createDefaultCategory(shopId: number) {
@@ -65,7 +65,6 @@ export async function reassignProductsToDefaultCategory(oldCategoryId: number, d
   `;
   await db.query(query, [defaultCategoryId, oldCategoryId]);
 }
-
 export async function deleteCategory(categoryId: number) {
   await db.query('DELETE FROM categories WHERE id = $1', [categoryId]);
 }

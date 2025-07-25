@@ -1,0 +1,89 @@
+// CreateShopForm.scss
+
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4rem 1rem;
+  background-color: #121212;
+  color: #f0f0f0;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    color: #ffffff;
+  }
+
+  form {
+    background-color: #1e1e1e;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+
+    input,
+    textarea {
+      background-color: #2a2a2a;
+      border: 1px solid #333;
+      border-radius: 0.5rem;
+      padding: 0.75rem 1rem;
+      color: #f0f0f0;
+      font-size: 1rem;
+
+      &:focus {
+        outline: none;
+        border-color: #4ade80;
+        background-color: #1f1f1f;
+      }
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    button {
+      background-color: #4ade80;
+      color: #121212;
+      font-weight: 600;
+      border: none;
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: #22c55e;
+      }
+
+      &:disabled {
+        background-color: #9ca3af;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  p {
+    margin-top: 1rem;
+    font-size: 1rem;
+    text-align: center;
+
+    &.loading {
+      color: #facc15;
+    }
+
+    &.success {
+      color: #4ade80;
+    }
+
+    &.error {
+      color: #f87171;
+    }
+  }
+}
