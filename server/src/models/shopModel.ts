@@ -67,3 +67,7 @@ export async function updateShopHoursById(id: number, workingHours: string) {
   );
   return result.rows[0];
 }
+export async function findShopById(id: number) {
+  const result = await pool.query(`SELECT * FROM shops WHERE id = $1`, [id]);
+  return result.rows[0];
+}
