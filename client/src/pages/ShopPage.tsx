@@ -22,7 +22,8 @@ export default function ShopPage() {
   useEffect(() => {
     if (!slug) return;
 
-    fetch(`http://localhost:3001/api/shops/${slug}`)
+    //fetch(`http://localhost:3001/api/shops/${slug}`)
+    fetch(`${import.meta.env.VITE_API_URL}/api/shops/${slug}`)
       .then((res) => {
         if (!res.ok) throw new Error('Shop not found');
         return res.json();
