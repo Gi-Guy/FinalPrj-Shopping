@@ -32,7 +32,7 @@ export default function StorePage() {
   const [shop, setShop] = useState<Shop | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
-  const [newCategory, setNewCategory] = useState<{ name: string; description: string }>({ name: '', description: '' });
+  const [newCategory, setNewCategory] = useState<{ name: string; description: string; slug: string }>({ name: '', description: '', slug: '' });
   const [newProduct, setNewProduct] = useState<{ name: string; price: number; description: string; category_id: number }>({ name: '', price: 0, description: '', category_id: 0 });
 
   useEffect(() => {
@@ -61,7 +61,7 @@ export default function StorePage() {
     if (!shop) return;
     axios.post(`${import.meta.env.VITE_API_URL}/api/categories`, {
       ...newCategory,
-      shop_id: shop.id,
+      shopSlug: shop.slug,
     })
     .then(res => setCategories([...categories, res.data as Category]))
     .catch(err => console.error('Error adding category:', err));
@@ -99,6 +99,7 @@ export default function StorePage() {
         <div>
           <input type="text" placeholder="Category Name" value={newCategory.name} onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })} />
           <input type="text" placeholder="Description" value={newCategory.description} onChange={(e) => setNewCategory({ ...newCategory, description: e.target.value })} />
+          <input type="text" placeholder="Category Slug" value={newCategory.slug} onChange={(e) => setNewCategory({ ...newCategory, slug: e.target.value })} />
           <button onClick={handleAddCategory}>Add Category</button>
         </div>
       </section>
