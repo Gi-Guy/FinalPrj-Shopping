@@ -31,7 +31,7 @@ export async function createUser(user: CreateUserInput) {
 
   const result = await db.query(
     `INSERT INTO users
-     (username, email, first_name, last_name, password_hash, gender, phone, shop_id)
+     (username, email, first_name, last_name, password_hash, gender, phone, shop_id, is_seller)
      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
      RETURNING *`,
     [username, email, first_name, last_name, password_hash, gender, phone, shop_id, is_seller]
