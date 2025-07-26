@@ -25,6 +25,7 @@ interface Product {
   price: number;
   category_id: number;
   image_url?: string;
+  category_name?: string;
 }
 
 interface UploadResponse {
@@ -91,7 +92,7 @@ export default function StorePage() {
         ...newProduct,
         shop_id: shop.id,
         image_url: imageUrl,
-        seller_id: 1, // Example default
+        seller_id: 1,
       };
 
       const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/products`, productData);
@@ -132,7 +133,11 @@ export default function StorePage() {
         <h4>Products</h4>
         <ul>
           {Array.isArray(products) && products.map(prod => (
-            <li key={prod.id}>{prod.name} - ${prod.price}</li>
+            <li key={prod.id} style={{ marginBottom: '1rem' }}>
+              {prod.image_url && <img src={import.meta.env.VITE_API_URL + prod.image_url} alt={prod.name} style={{ width: '60px', marginRight: '10px' }} />}<br />
+              <strong>{prod.name}</strong> - ${prod.price}<br />
+              <small>Category: {prod.category_name || 'N/A'}</small>
+            </li>
           ))}
         </ul>
         <div>
