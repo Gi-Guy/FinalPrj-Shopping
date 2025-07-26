@@ -14,6 +14,7 @@ import CreateCategoryPage from './pages/CreateCategoryPage';
 import NotFoundPage from './pages/NotFoundPage';
 import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
+import StorePage from './pages/StorePage';
 
 const routes: RouteObject[] = [
   {
@@ -28,6 +29,7 @@ const routes: RouteObject[] = [
       { path: '*', element: <NotFoundPage /> },
       {path: 'register', element: <RegisterPage /> },
       {path: 'login', element: <LoginPage /> },
+      {path: 'store/:slug', element: <StorePage /> },
     ],
   },
 ];
