@@ -32,12 +32,25 @@ export default function LoginPage() {
     setError('');
     try {
       const res = await axios.post<LoginResponse>(`${import.meta.env.VITE_API_URL}/api/auth/login`, form);
+      console.log('🔑 Login response:', res.data);
       localStorage.setItem('token', res.data.token);
       navigate('/');
-    } catch (err) {
-      if (err && typeof err === 'object' && 'response' in err) {
-        const axiosErr = err as { response?: { data?: { message?: string } } };
-        setError(axiosErr.response?.data?.message || 'Login failed');
+    } catch (err: unknown) {
+      interface AxiosErrorResponse {
+        response?: {
+          data?: {
+            message?: string;
+          };
+        };
+      }
+      const axiosError = err as AxiosErrorResponse;
+      if (
+        typeof err === 'object' &&
+        err !== null &&
+        axiosError.response?.data?.message &&
+        typeof axiosError.response.data.message === 'string'
+      ) {
+        setError(axiosError.response.data.message);
       } else {
         setError('Unexpected error occurred');
       }
