@@ -154,7 +154,7 @@ export async function handleGetUserById(req: AuthenticatedRequest, res: Response
   try {
     const user = await findUserById(userId);
     if (!user) return res.status(404).json({ error: 'User not found' });
-
+    console.log('Fetched user:', user);
     res.json(user);
   } catch (err) {
     console.error('Error fetching user:', err);
