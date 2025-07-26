@@ -67,7 +67,8 @@ export default function RegisterPage() {
 
   const strength = getPasswordStrength(form.password);
 
-  return (
+return (
+  <div className="auth-page">
     <div className="auth-container">
       <h2>Register</h2>
       <form onSubmit={handleSubmit}>
@@ -87,10 +88,13 @@ export default function RegisterPage() {
           <option value="other">Other</option>
         </select>
         <input type="password" name="password" placeholder="Password" value={form.password} onChange={handleChange} />
-        <p>Password Strength: {strength}</p>
+        <p className={`password-strength ${strength.toLowerCase()}`}>
+          Password Strength: {strength}
+        </p>
         <button type="submit">Register</button>
       </form>
       {error && <p className="error">{error}</p>}
     </div>
-  );
+  </div>
+);
 }
