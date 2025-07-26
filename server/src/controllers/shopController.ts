@@ -15,13 +15,18 @@ import {
 
 import { createDefaultCategory } from '../models/categoryModel';
 
+interface AuthenticatedRequest extends Request {
+  user?: { id: number };
+}
+
 function generateSlug(name: string): string {
   return name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9\-]/g, '');
 }
 
-export async function handleCreateShop(req: Request, res: Response) {
+export async function handleCreateShop(req: AuthenticatedRequest, res: Response) {
   console.log('Hey im here:', req.body);
-  const { name, description, ownerId, location, workingHours } = req.body;
+  const { name, description, location, workingHours } = req.body;
+  const ownerId = req.user?.id;
 
   if (!name || !ownerId) {
     return res.status(400).json({ error: 'Missing name or ownerId' });

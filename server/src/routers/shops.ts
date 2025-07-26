@@ -7,10 +7,12 @@ import {
   handleUpdateShopHours
 } from '../controllers/shopController';
 import { findShopBySlug } from '../models/shopModel';
+import { authenticateToken } from '../middleware/authMiddleware';
 
 const router = express.Router();
 
-router.post('/', handleCreateShop);
+//router.post('/', handleCreateShop);
+router.post('/', authenticateToken, handleCreateShop);
 router.put('/:slug', handleUpdateShop);
 router.delete('/:slug', handleDeleteShop);
 router.patch('/:slug/status', handleToggleShopStatus);

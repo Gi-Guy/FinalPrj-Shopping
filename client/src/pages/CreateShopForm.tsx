@@ -40,7 +40,10 @@ export default function CreateShopForm() {
         body: JSON.stringify(form)
       });
 
-      if (!res.ok) throw new Error('Request failed');
+      if (!res.ok) {
+        const errData = await res.json();
+        throw new Error(errData?.error || 'Request failed');
+      }
 
       const data = await res.json();
       setStatus('success');
