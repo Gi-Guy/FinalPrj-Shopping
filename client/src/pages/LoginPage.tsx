@@ -57,7 +57,8 @@ export default function LoginPage() {
     }
   };
 
-  return (
+return (
+  <div className="auth-page">
     <div className="auth-container">
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
@@ -67,5 +68,6 @@ export default function LoginPage() {
       </form>
       {error && <p className="error">{error}</p>}
     </div>
-  );
+  </div>
+);
 }
