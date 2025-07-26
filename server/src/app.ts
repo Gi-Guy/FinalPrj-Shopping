@@ -1,41 +1,47 @@
 import express from 'express';
 import cors from 'cors';
-import pool from './db'; 
 import path from 'path';
+import pool from './db';
 
+// Routes
 import shopRoutes from './routers/shops';
 import categoryRoutes from './routers/categories';
 import userRoutes from './routers/users';
 import productRoutes from './routers/products';
-import messageRoutes from './routers/messages'; 
+import messageRoutes from './routers/messages';
 import authRoutes from './routers/auth';
 import uploadRoutes from './routers/upload';
 
 const app = express();
 
+// Middleware
 app.use(cors());
 app.use(express.json());
 app.use('/pictures', express.static(path.join(__dirname, '../pictures')));
 
-app.use('/api/shops', shopRoutes);
+// API Routes
+app.use('/api/shops', shopRoutes);           // ✅ includes handleCreateShop
 app.use('/api/categories', categoryRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
-app.use('/api/messages', messageRoutes); 
+app.use('/api/messages', messageRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/upload', uploadRoutes);
-app.use('/api/products', productRoutes);
-// health check endpoint for testing only
+
+// Remove duplicate product route
+// app.use('/api/products', productRoutes); // ❌ Already declared above
+
+// Health Check
 app.get('/api/health', (_, res) => {
   res.send({ status: 'OK' });
 });
 
-// Testing endpoint
+// Simple Ping
 app.get('/api/ping', (_, res) => {
   res.json({ message: 'Backend is connected ✅' });
 });
 
-// ✅ Get user by ID
+// Get user by ID (🔍 Individual query - may be temporary in future)
 app.get('/api/user/:id', async (req, res) => {
   const { id } = req.params;
   try {
@@ -50,7 +56,7 @@ app.get('/api/user/:id', async (req, res) => {
   }
 });
 
-// ✅ Update user by ID
+// Update user by ID (🔧 Could be moved into userRoutes)
 app.put('/api/user/:id', async (req, res) => {
   const { id } = req.params;
   const { name, email, location, bio, avatar } = req.body;

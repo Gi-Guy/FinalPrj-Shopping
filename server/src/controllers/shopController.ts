@@ -16,17 +16,20 @@ import {
 import { createDefaultCategory } from '../models/categoryModel';
 
 interface AuthenticatedRequest extends Request {
-  user?: { id: number };
+  user?: { userId: number }; // ✅ Matches your authenticateToken
 }
 
 function generateSlug(name: string): string {
-  return name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9\-]/g, '');
+  return name
+    .toLowerCase()
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9\-]/g, '');
 }
 
 export async function handleCreateShop(req: AuthenticatedRequest, res: Response) {
-  console.log('Hey im here:', req.body);
+  console.log('Incoming shop data:', req.body);
   const { name, description, location, workingHours } = req.body;
-  const ownerId = req.user?.id;
+  const ownerId = req.user?.userId; // ✅ FIXED to match jwt payload
 
   if (!name || !ownerId) {
     return res.status(400).json({ error: 'Missing name or ownerId' });
@@ -53,10 +56,10 @@ export async function handleCreateShop(req: AuthenticatedRequest, res: Response)
 
     await createDefaultCategory(newShop.id);
 
-    res.status(201).json(newShop);
+    return res.status(201).json(newShop);
   } catch (err) {
     console.error('Error creating shop:', err);
-    res.status(500).json({ error: 'Server error' });
+    return res.status(500).json({ error: 'Server error' });
   }
 }
 
