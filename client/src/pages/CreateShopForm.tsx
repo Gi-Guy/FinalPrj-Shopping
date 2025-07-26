@@ -1,21 +1,25 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Input from '../components/Input';
 import TextArea from '../components/TextArea';
 import Button from '../components/Button';
 import '../components/CreateShopForm.scss';
-
 
 export default function CreateShopForm() {
   const [form, setForm] = useState({
     name: '',
     description: '',
     location: '',
-    workingHours: '',
-    ownerId: 1
+    workingHours: ''
   });
 
   const [status, setStatus] = useState('');
+  const [token, setToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    const savedToken = localStorage.getItem('token');
+    if (savedToken) setToken(savedToken);
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -27,10 +31,12 @@ export default function CreateShopForm() {
     setStatus('loading');
 
     try {
-      // const res = await fetch('http://localhost:3001/api/shops', {
       const res = await fetch(`${import.meta.env.VITE_API_URL}/api/shops`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify(form)
       });
 
