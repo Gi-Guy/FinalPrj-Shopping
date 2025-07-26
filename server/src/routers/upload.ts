@@ -1,14 +1,19 @@
 import express from 'express';
 import multer from 'multer';
 import path from 'path';
+import fs from 'fs';
 
 const router = express.Router();
 
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, '../../pictures'));
+  destination: (req: express.Request, file: Express.Multer.File, cb: (error: Error | null, destination: string) => void) => {
+    const uploadPath = path.join(__dirname, '../../pictures');
+    if (!fs.existsSync(uploadPath)) {
+      fs.mkdirSync(uploadPath, { recursive: true });
+    }
+    cb(null, uploadPath);
   },
-  filename: (req, file, cb) => {
+  filename: (req: express.Request, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void) => {
     const uniqueName = Date.now() + '-' + file.originalname;
     cb(null, uniqueName);
   },
@@ -16,7 +21,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-router.post('/', upload.single('image'), (req, res) => {
+router.post('/', upload.single('image'), (req: express.Request, res: express.Response) => {
   if (!req.file) {
     return res.status(400).json({ error: 'No file uploaded' });
   }

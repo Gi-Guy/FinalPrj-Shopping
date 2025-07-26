@@ -37,9 +37,17 @@ export async function getProductById(id: number) {
 
 export async function getProductsByShop(shopId: number) {
   const result = await db.query(
-    `SELECT * FROM products WHERE shop_id = $1 AND is_active = TRUE`,
+    `
+    SELECT 
+      p.*, 
+      c.name AS category_name
+    FROM products p
+    JOIN categories c ON p.category_id = c.id
+    WHERE p.shop_id = $1 AND p.is_active = TRUE
+    `,
     [shopId]
   );
+
   return result.rows;
 }
 
