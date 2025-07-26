@@ -15,6 +15,7 @@ import NotFoundPage from './pages/NotFoundPage';
 import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
 import ChatPage from './pages/ChatPageT'; 
+import StorePage from './pages/StorePage';
 
 const routes: RouteObject[] = [
   {
@@ -30,6 +31,9 @@ const routes: RouteObject[] = [
       { path: 'login', element: <LoginPage /> }, 
       { path: 'register', element: <RegisterPage /> }, 
       { path: '*', element: <NotFoundPage /> },
+      {path: 'register', element: <RegisterPage /> },
+      {path: 'login', element: <LoginPage /> },
+      {path: 'store/:slug', element: <StorePage /> },
     ],
   },
 ];
