@@ -8,7 +8,7 @@ export default function Layout() {
       <header className="app-header">Final Project</header>
 
       <nav className="app-nav">
-        <NavLink to="/" end>Home</NavLink>
+        <NavLink to="/">Home</NavLink>
         <NavLink to="/profile">User Profile</NavLink>
         <NavLink to="/create-shop">Create Shop</NavLink>
         <NavLink to="/create-category">Create Category</NavLink>
