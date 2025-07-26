@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../components/Auth.scss';
@@ -20,6 +20,13 @@ export default function RegisterPage() {
   });
   const [error, setError] = useState('');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      navigate('/');
+    }
+  }, [navigate]);
 
   const getPasswordStrength = (password: string) => {
     if (password.length < 6) return 'Weak';
@@ -52,13 +59,20 @@ export default function RegisterPage() {
       localStorage.setItem('token', res.data.token);
       navigate('/');
     } catch (err: unknown) {
+      interface AxiosErrorResponse {
+        response?: {
+          data?: {
+            message?: string;
+          };
+        };
+      }
       if (
         typeof err === 'object' &&
         err !== null &&
         'response' in err &&
-        typeof (err as { response?: { data?: { message?: unknown } } }).response?.data?.message === 'string'
+        typeof (err as AxiosErrorResponse).response?.data?.message === 'string'
       ) {
-        setError((err as { response: { data: { message: string } } }).response.data.message);
+        setError((err as AxiosErrorResponse).response!.data!.message!);
       } else {
         setError('Unexpected error occurred');
       }
