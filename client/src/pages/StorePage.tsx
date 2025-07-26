@@ -27,13 +27,18 @@ interface Product {
   image_url?: string;
 }
 
+interface UploadResponse {
+  url: string;
+}
+
 export default function StorePage() {
   const { slug } = useParams();
   const [shop, setShop] = useState<Shop | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [newCategory, setNewCategory] = useState<{ name: string; description: string; slug: string }>({ name: '', description: '', slug: '' });
-  const [newProduct, setNewProduct] = useState<{ name: string; price: number; description: string; category_id: number }>({ name: '', price: 0, description: '', category_id: 0 });
+  const [newProduct, setNewProduct] = useState<{ name: string; price: number; description: string; category_id: number; image_url?: string }>({ name: '', price: 0, description: '', category_id: 0 });
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
   useEffect(() => {
     if (!slug) return;
@@ -67,14 +72,33 @@ export default function StorePage() {
     .catch(err => console.error('Error adding category:', err));
   };
 
-  const handleAddProduct = () => {
+  const handleAddProduct = async () => {
     if (!shop) return;
-    axios.post(`${import.meta.env.VITE_API_URL}/api/products`, {
-      ...newProduct,
-      shop_id: shop.id,
-    })
-    .then(res => setProducts([...products, res.data as Product]))
-    .catch(err => console.error('Error adding product:', err));
+
+    try {
+      let imageUrl: string | undefined = undefined;
+
+      if (imageFile) {
+        const formData = new FormData();
+        formData.append('image', imageFile);
+        const uploadRes = await axios.post<UploadResponse>(`${import.meta.env.VITE_API_URL}/api/upload`, formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        imageUrl = uploadRes.data.url;
+      }
+
+      const productData = {
+        ...newProduct,
+        shop_id: shop.id,
+        image_url: imageUrl,
+        seller_id: 1, // Example default
+      };
+
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/products`, productData);
+      setProducts([...products, res.data as Product]);
+    } catch (err) {
+      console.error('Error adding product:', err);
+    }
   };
 
   return (
@@ -115,6 +139,7 @@ export default function StorePage() {
           <input type="text" placeholder="Product Name" value={newProduct.name} onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })} />
           <input type="number" placeholder="Price" value={newProduct.price} onChange={(e) => setNewProduct({ ...newProduct, price: parseFloat(e.target.value) || 0 })} />
           <input type="text" placeholder="Description" value={newProduct.description} onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })} />
+          <input type="file" accept="image/*" onChange={(e) => setImageFile(e.target.files?.[0] || null)} />
           <select value={newProduct.category_id} onChange={(e) => setNewProduct({ ...newProduct, category_id: parseInt(e.target.value) })}>
             <option value={0}>Select Category</option>
             {categories.map(cat => (
