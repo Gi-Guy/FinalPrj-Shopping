@@ -10,10 +10,10 @@ export default function CreateShopForm() {
     description: '',
     location: '',
     workingHours: '',
-    ownerId: 0, // ✅ Added ownerId
+    owner_id: 0, // backend expects snake_case
   });
 
-  const [status, setStatus] = useState('');
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export default function CreateShopForm() {
 
     setToken(savedToken);
 
-    // ✅ Fetch user to get ownerId
+    // Fetch user info to get owner_id
     fetch(`${import.meta.env.VITE_API_URL}/api/users/me`, {
       headers: {
         Authorization: `Bearer ${savedToken}`,
@@ -32,12 +32,12 @@ export default function CreateShopForm() {
         if (!res.ok) throw new Error('Unauthorized');
         return res.json();
       })
-      .then(data => {
-        setForm(prev => ({ ...prev, ownerId: data.id }));
+      .then(user => {
+        setForm(prev => ({ ...prev, owner_id: user.id }));
       })
       .catch(err => {
-        console.error('Failed to fetch user:', err);
-        setStatus('error');
+        console.error('Failed to get user info:', err);
+        localStorage.removeItem('token');
       });
   }, []);
 
@@ -55,7 +55,7 @@ export default function CreateShopForm() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(form),
       });
@@ -68,8 +68,17 @@ export default function CreateShopForm() {
       const data = await res.json();
       setStatus('success');
       console.log('Created shop:', data);
+
+      // Optional: reset form
+      setForm({
+        name: '',
+        description: '',
+        location: '',
+        workingHours: '',
+        owner_id: form.owner_id,
+      });
     } catch (err) {
-      console.error(err);
+      console.error('Create shop error:', err);
       setStatus('error');
     }
   };
@@ -82,12 +91,12 @@ export default function CreateShopForm() {
         <TextArea name="description" placeholder="Description" value={form.description} onChange={handleChange} />
         <Input name="location" placeholder="Location" value={form.location} onChange={handleChange} />
         <Input name="workingHours" placeholder="Working Hours" value={form.workingHours} onChange={handleChange} />
-        <Button type="submit" disabled={!form.ownerId || status === 'loading'}>
-          {status === 'loading' ? 'Creating...' : 'Create'}
-        </Button>
+        <Button type="submit">Create</Button>
       </form>
+
+      {status === 'loading' && <p>Creating shop...</p>}
       {status === 'success' && <p>✅ Shop created successfully</p>}
-      {status === 'error' && <p>❌ Error creating shop</p>}
+      {status === 'error' && <p style={{ color: 'red' }}>❌ Error creating shop</p>}
     </main>
   );
 }
