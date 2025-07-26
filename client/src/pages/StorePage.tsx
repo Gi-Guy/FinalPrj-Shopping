@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
 interface Shop {
+  id: number;
   name: string;
   description: string;
   working_hours: string;
@@ -41,7 +42,7 @@ export default function StorePage() {
       .then(res => setShop(res.data as Shop))
       .catch(err => console.error('Error loading shop:', err));
 
-    axios.get(`${import.meta.env.VITE_API_URL}/api/categories/shops/${slug}/all`)
+    axios.get(`${import.meta.env.VITE_API_URL}/api/categories/shop/${slug}`)
       .then(res => {
         if (Array.isArray(res.data)) setCategories(res.data as Category[]);
         else console.error('Categories response is not an array:', res.data);
@@ -57,18 +58,20 @@ export default function StorePage() {
   }, [slug]);
 
   const handleAddCategory = () => {
+    if (!shop) return;
     axios.post(`${import.meta.env.VITE_API_URL}/api/categories`, {
       ...newCategory,
-      shop_slug: slug,
+      shop_id: shop.id,
     })
     .then(res => setCategories([...categories, res.data as Category]))
     .catch(err => console.error('Error adding category:', err));
   };
 
   const handleAddProduct = () => {
+    if (!shop) return;
     axios.post(`${import.meta.env.VITE_API_URL}/api/products`, {
       ...newProduct,
-      shop_slug: slug,
+      shop_id: shop.id,
     })
     .then(res => setProducts([...products, res.data as Product]))
     .catch(err => console.error('Error adding product:', err));
