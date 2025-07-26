@@ -1,4 +1,6 @@
 .store-page {
+  background-color: #2e2e2e;
+  color: #ffffff;
   padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
@@ -8,29 +10,33 @@
     font-size: 2rem;
     margin-bottom: 1.5rem;
     text-align: center;
+    color: #ffffff;
   }
 
   section {
     margin-top: 2rem;
     padding: 1.5rem;
-    background: #f9f9f9;
+    background: #3a3a3a;
     border-radius: 12px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   }
 
   h4 {
     font-size: 1.4rem;
     margin-bottom: 1rem;
-    border-bottom: 2px solid #ddd;
+    border-bottom: 2px solid #555;
     padding-bottom: 0.5rem;
+    color: #ffffff;
   }
 
   input,
   select {
     padding: 0.5rem;
     margin: 0.3rem 0.5rem 0.8rem 0;
-    border: 1px solid #ccc;
+    border: 1px solid #555;
     border-radius: 8px;
+    background-color: #2e2e2e;
+    color: #ffffff;
     width: 100%;
     max-width: 300px;
     display: block;
@@ -39,12 +45,13 @@
   input[type="file"] {
     padding: 0.2rem;
     border: none;
+    color: #ffffff;
   }
 
   button {
     padding: 0.5rem 1rem;
     background-color: #0072e4;
-    color: white;
+    color: #ffffff;
     border: none;
     border-radius: 8px;
     cursor: pointer;
@@ -63,10 +70,10 @@
     }
 
     &.secondary {
-      background-color: #555;
+      background-color: #666;
 
       &:hover {
-        background-color: #333;
+        background-color: #444;
       }
     }
   }
@@ -78,7 +85,7 @@
 
     li {
       padding: 0.6rem 0;
-      border-bottom: 1px solid #e0e0e0;
+      border-bottom: 1px solid #555;
       display: flex;
       flex-direction: column;
 
@@ -118,17 +125,14 @@
   }
 
   .store-header {
-    background-color: #eef3f7;
+    background-color: #383838;
     padding: 1.5rem;
     border-radius: 10px;
     margin-bottom: 2rem;
 
-    h3 {
-      margin: 0;
-    }
-
+    h3,
     p {
-      margin: 0.3rem 0;
+      color: #ffffff;
     }
   }
 }
