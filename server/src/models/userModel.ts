@@ -26,15 +26,15 @@ interface UpdateUserInput {
 export async function createUser(user: CreateUserInput) {
   const {
     username, email, first_name, last_name,
-    password_hash, gender, phone, shop_id
+    password_hash, gender, phone, shop_id, is_seller
   } = user;
 
   const result = await db.query(
     `INSERT INTO users
-     (username, email, first_name, last_name, password_hash, gender, phone, shop_id)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+     (username, email, first_name, last_name, password_hash, gender, phone, shop_id, is_seller)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
      RETURNING *`,
-    [username, email, first_name, last_name, password_hash, gender, phone, shop_id]
+    [username, email, first_name, last_name, password_hash, gender, phone, shop_id, is_seller]
   );
 
   return result.rows[0];
@@ -115,3 +115,8 @@ export async function updateUserPassword(userId: number, newPassword: string) {
   );
   return result.rows[0];
 }
+
+export async function findUserByUsername(username: string) {
+  const result = await db.query(`SELECT * FROM users WHERE username = $1`, [username]);
+  return result.rows[0] || null;
+}   
