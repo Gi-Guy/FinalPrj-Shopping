@@ -37,9 +37,12 @@ export default function StorePage() {
   const [shop, setShop] = useState<Shop | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
-  const [newCategory, setNewCategory] = useState<{ name: string; description: string; slug: string }>({ name: '', description: '', slug: '' });
-  const [newProduct, setNewProduct] = useState<{ name: string; price: number; description: string; category_id: number; image_url?: string }>({ name: '', price: 0, description: '', category_id: 0 });
+  const [newCategory, setNewCategory] = useState<Omit<Category, 'id'>>({ name: '', description: '', slug: '' });
+  const [newProduct, setNewProduct] = useState<Omit<Product, 'id' | 'category_name'>>({ name: '', price: 0, description: '', category_id: 0 });
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [editingProductId, setEditingProductId] = useState<number | null>(null);
+  const [editingCategoryId, setEditingCategoryId] = useState<number | null>(null);
+  const [editingShop, setEditingShop] = useState<boolean>(false);
 
   useEffect(() => {
     if (!slug) return;
@@ -49,17 +52,11 @@ export default function StorePage() {
       .catch(err => console.error('Error loading shop:', err));
 
     axios.get(`${import.meta.env.VITE_API_URL}/api/categories/shop/${slug}`)
-      .then(res => {
-        if (Array.isArray(res.data)) setCategories(res.data as Category[]);
-        else console.error('Categories response is not an array:', res.data);
-      })
+      .then(res => setCategories(res.data as Category[]))
       .catch(err => console.error('Error loading categories:', err));
 
     axios.get(`${import.meta.env.VITE_API_URL}/api/products/${slug}/products`)
-      .then(res => {
-        if (Array.isArray(res.data)) setProducts(res.data as Product[]);
-        else console.error('Products response is not an array:', res.data);
-      })
+      .then(res => setProducts(res.data as Product[]))
       .catch(err => console.error('Error loading products:', err));
   }, [slug]);
 
@@ -69,8 +66,11 @@ export default function StorePage() {
       ...newCategory,
       shopSlug: shop.slug,
     })
-    .then(res => setCategories([...categories, res.data as Category]))
-    .catch(err => console.error('Error adding category:', err));
+      .then(res => {
+        setCategories([...categories, res.data as Category]);
+        setNewCategory({ name: '', description: '', slug: '' });
+      })
+      .catch(err => console.error('Error adding category:', err));
   };
 
   const handleAddProduct = async () => {
@@ -85,7 +85,7 @@ export default function StorePage() {
         const uploadRes = await axios.post<UploadResponse>(`${import.meta.env.VITE_API_URL}/api/upload`, formData, {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
-        imageUrl = uploadRes.data.url;
+        imageUrl = (uploadRes.data as UploadResponse).url;
       }
 
       const productData = {
@@ -97,9 +97,51 @@ export default function StorePage() {
 
       const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/products`, productData);
       setProducts([...products, res.data as Product]);
+      setNewProduct({ name: '', price: 0, description: '', category_id: 0 });
+      setImageFile(null);
     } catch (err) {
       console.error('Error adding product:', err);
     }
+  };
+
+  const handleDeleteCategory = (id: number) => {
+    axios.delete(`${import.meta.env.VITE_API_URL}/api/categories/${id}`)
+      .then(() => setCategories(categories.filter(cat => cat.id !== id)))
+      .catch(err => console.error('Error deleting category:', err));
+  };
+
+  const handleDeleteProduct = (id: number) => {
+    axios.delete(`${import.meta.env.VITE_API_URL}/api/products/product/${id}`)
+      .then(() => setProducts(products.filter(prod => prod.id !== id)))
+      .catch(err => console.error('Error deleting product:', err));
+  };
+
+  const handleUpdateShop = () => {
+    if (!shop) return;
+    axios.put(`${import.meta.env.VITE_API_URL}/api/shops/${shop.id}`, shop)
+      .then(res => {
+        setShop(res.data as Shop);
+        setEditingShop(false);
+      })
+      .catch(err => console.error('Error updating shop:', err));
+  };
+
+  const handleUpdateCategory = (category: Category) => {
+    axios.put(`${import.meta.env.VITE_API_URL}/api/categories/${category.id}`, category)
+      .then(res => {
+        setCategories(categories.map(c => (c.id === category.id ? res.data as Category : c)));
+        setEditingCategoryId(null);
+      })
+      .catch(err => console.error('Error updating category:', err));
+  };
+
+  const handleUpdateProduct = (product: Product) => {
+    axios.put(`${import.meta.env.VITE_API_URL}/api/products/product/${product.id}`, product)
+      .then(res => {
+        setProducts(products.map(p => (p.id === product.id ? res.data as Product : p)));
+        setEditingProductId(null);
+      })
+      .catch(err => console.error('Error updating product:', err));
   };
 
   return (
@@ -107,18 +149,46 @@ export default function StorePage() {
       <h2>Store Page</h2>
       {shop && (
         <div>
-          <h3>{shop.name}</h3>
-          <p>{shop.description}</p>
-          <p>Working hours: {shop.working_hours}</p>
-          <p>Status: {shop.is_active ? 'Active' : 'Inactive'}</p>
+          {editingShop ? (
+            <div>
+              <input type="text" value={shop.name} onChange={(e) => setShop({ ...shop, name: e.target.value })} />
+              <input type="text" value={shop.description} onChange={(e) => setShop({ ...shop, description: e.target.value })} />
+              <input type="text" value={shop.working_hours} onChange={(e) => setShop({ ...shop, working_hours: e.target.value })} />
+              <button onClick={handleUpdateShop}>Save</button>
+              <button onClick={() => setEditingShop(false)}>Cancel</button>
+            </div>
+          ) : (
+            <div>
+              <h3>{shop.name}</h3>
+              <p>{shop.description}</p>
+              <p>Working hours: {shop.working_hours}</p>
+              <p>Status: {shop.is_active ? 'Active' : 'Inactive'}</p>
+              <button onClick={() => setEditingShop(true)}>Edit Shop</button>
+            </div>
+          )}
         </div>
       )}
 
       <section>
         <h4>Categories</h4>
         <ul>
-          {Array.isArray(categories) && categories.map(cat => (
-            <li key={cat.id}>{cat.name}</li>
+          {categories.map(cat => (
+            <li key={cat.id}>
+              {editingCategoryId === cat.id ? (
+                <div>
+                  <input type="text" value={cat.name} onChange={(e) => setCategories(categories.map(c => c.id === cat.id ? { ...c, name: e.target.value } : c))} />
+                  <input type="text" value={cat.description} onChange={(e) => setCategories(categories.map(c => c.id === cat.id ? { ...c, description: e.target.value } : c))} />
+                  <input type="text" value={cat.slug} onChange={(e) => setCategories(categories.map(c => c.id === cat.id ? { ...c, slug: e.target.value } : c))} />
+                  <button onClick={() => handleUpdateCategory(cat)}>Save</button>
+                  <button onClick={() => setEditingCategoryId(null)}>Cancel</button>
+                </div>
+              ) : (
+                <>
+                  {cat.name} <button onClick={() => setEditingCategoryId(cat.id)}>Edit</button>
+                  <button onClick={() => handleDeleteCategory(cat.id)}>Delete</button>
+                </>
+              )}
+            </li>
           ))}
         </ul>
         <div>
@@ -132,11 +202,23 @@ export default function StorePage() {
       <section>
         <h4>Products</h4>
         <ul>
-          {Array.isArray(products) && products.map(prod => (
-            <li key={prod.id} style={{ marginBottom: '1rem' }}>
-              {prod.image_url && <img src={import.meta.env.VITE_API_URL + prod.image_url} alt={prod.name} style={{ width: '60px', marginRight: '10px' }} />}<br />
-              <strong>{prod.name}</strong> - ${prod.price}<br />
-              <small>Category: {prod.category_name || 'N/A'}</small>
+          {products.map(prod => (
+            <li key={prod.id}>
+              {editingProductId === prod.id ? (
+                <div>
+                  <input type="text" value={prod.name} onChange={(e) => setProducts(products.map(p => p.id === prod.id ? { ...p, name: e.target.value } : p))} />
+                  <input type="number" value={prod.price} onChange={(e) => setProducts(products.map(p => p.id === prod.id ? { ...p, price: parseFloat(e.target.value) } : p))} />
+                  <input type="text" value={prod.description} onChange={(e) => setProducts(products.map(p => p.id === prod.id ? { ...p, description: e.target.value } : p))} />
+                  <button onClick={() => handleUpdateProduct(prod)}>Save</button>
+                  <button onClick={() => setEditingProductId(null)}>Cancel</button>
+                </div>
+              ) : (
+                <>
+                  {prod.name} - ${prod.price} - {prod.category_name || 'Unknown'}
+                  <button onClick={() => setEditingProductId(prod.id)}>Edit</button>
+                  <button onClick={() => handleDeleteProduct(prod.id)}>Delete</button>
+                </>
+              )}
             </li>
           ))}
         </ul>
