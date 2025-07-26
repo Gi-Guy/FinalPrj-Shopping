@@ -95,7 +95,7 @@ export default function StorePage() {
         seller_id: 1,
       };
 
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/products`, productData);
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/products/${slug}/products`, productData);
       setProducts([...products, res.data as Product]);
     } catch (err) {
       console.error('Error adding product:', err);
