@@ -6,7 +6,8 @@ import {
   deleteCategory,
   getCategoryById,
   getDefaultCategoryForShop,
-  reassignProductsToDefaultCategory
+  reassignProductsToDefaultCategory,
+  getCategoriesByShopSlug
 } from '../models/categoryModel';
 import { findShopBySlug } from '../models/shopModel';
 
@@ -83,6 +84,17 @@ export async function handleDeleteCategory(req: Request, res: Response) {
     res.status(204).send();
   } catch (err) {
     console.error('Error deleting category:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+}
+export async function handleGetCategoriesByShop(req: Request, res: Response) {
+  const { shopSlug } = req.params;
+
+  try {
+    const categories = await getCategoriesByShopSlug(shopSlug);
+    res.json(categories);
+  } catch (err) {
+    console.error('Error fetching categories by shop slug:', err);
     res.status(500).json({ error: 'Server error' });
   }
 }

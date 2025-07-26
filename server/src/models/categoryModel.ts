@@ -68,3 +68,15 @@ export async function reassignProductsToDefaultCategory(oldCategoryId: number, d
 export async function deleteCategory(categoryId: number) {
   await db.query('DELETE FROM categories WHERE id = $1', [categoryId]);
 }
+
+export async function getCategoriesByShopSlug(slug: string) {
+  const query = `
+    SELECT c.*
+    FROM categories c
+    JOIN shops s ON s.id = c.shop_id
+    WHERE s.slug = $1
+    ORDER BY c.id;
+  `;
+  const result = await db.query(query, [slug]);
+  return result.rows;
+}
