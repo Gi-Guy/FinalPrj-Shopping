@@ -2,9 +2,13 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  min-height: 100vh;
+  padding-top: 4rem; 
+
+  padding-bottom: 4rem;
+  min-height: calc(100vh - 120px);
+
   background: #121212;
+}
 
   h2 {
     color: white;
