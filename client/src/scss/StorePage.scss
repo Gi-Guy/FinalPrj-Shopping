@@ -1,0 +1,134 @@
+.store-page {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  section {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: #f9f9f9;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.06);
+  }
+
+  h4 {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 0.5rem;
+  }
+
+  input,
+  select {
+    padding: 0.5rem;
+    margin: 0.3rem 0.5rem 0.8rem 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 300px;
+    display: block;
+  }
+
+  input[type="file"] {
+    padding: 0.2rem;
+    border: none;
+  }
+
+  button {
+    padding: 0.5rem 1rem;
+    background-color: #0072e4;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin: 0.5rem 0.5rem 1rem 0;
+
+    &:hover {
+      background-color: #005ec2;
+    }
+
+    &.danger {
+      background-color: #d93025;
+
+      &:hover {
+        background-color: #c5221f;
+      }
+    }
+
+    &.secondary {
+      background-color: #555;
+
+      &:hover {
+        background-color: #333;
+      }
+    }
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
+
+    li {
+      padding: 0.6rem 0;
+      border-bottom: 1px solid #e0e0e0;
+      display: flex;
+      flex-direction: column;
+
+      @media (min-width: 600px) {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      div {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+
+      button {
+        margin-top: 0.4rem;
+        @media (min-width: 600px) {
+          margin-top: 0;
+        }
+      }
+    }
+  }
+
+  .edit-form,
+  .add-form {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+
+    @media (min-width: 600px) {
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+  }
+
+  .store-header {
+    background-color: #eef3f7;
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+
+    h3 {
+      margin: 0;
+    }
+
+    p {
+      margin: 0.3rem 0;
+    }
+  }
+}
