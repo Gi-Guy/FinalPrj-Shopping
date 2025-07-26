@@ -55,7 +55,7 @@ export default function StorePage() {
       })
       .catch(err => console.error('Error loading categories:', err));
 
-    axios.get(`${import.meta.env.VITE_API_URL}/api/products/shop/${slug}/products`)
+    axios.get(`${import.meta.env.VITE_API_URL}/api/products/${slug}/products`)
       .then(res => {
         if (Array.isArray(res.data)) setProducts(res.data as Product[]);
         else console.error('Products response is not an array:', res.data);
