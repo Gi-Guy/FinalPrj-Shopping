@@ -38,7 +38,7 @@ export default function CreateShopForm() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(form), // no owner_id sent here
+        body: JSON.stringify(form),
       });
 
       if (!res.ok) {
@@ -64,9 +64,9 @@ export default function CreateShopForm() {
   };
 
   return (
-    <main>
+    <main className="create-shop">
       <h1>Create New Shop</h1>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="create-shop-form">
         <Input name="name" placeholder="Shop name" value={form.name} onChange={handleChange} />
         <TextArea name="description" placeholder="Description" value={form.description} onChange={handleChange} />
         <Input name="location" placeholder="Location" value={form.location} onChange={handleChange} />

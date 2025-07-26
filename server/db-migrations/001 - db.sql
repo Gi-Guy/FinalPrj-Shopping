@@ -2,7 +2,7 @@
 
 -- shops table.sql
 CREATE TABLE IF NOT EXISTS shops (
-  id SERIAL PRIMARY KEY,
+  shop_id TEXT PRIMARY KEY,       -- <-- Custom shop ID like "A1"
   name TEXT NOT NULL,
   description TEXT,
   slug TEXT UNIQUE NOT NULL,
