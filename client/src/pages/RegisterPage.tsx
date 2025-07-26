@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../components/Auth.scss';
@@ -20,6 +20,13 @@ export default function RegisterPage() {
   });
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const token = localStorage.getItem('token');
+
+  useEffect(() => {
+    if (token) {
+      navigate('/profile');
+    }
+  }, [token, navigate]);
 
   const getPasswordStrength = (password: string) => {
     if (password.length < 6) return 'Weak';

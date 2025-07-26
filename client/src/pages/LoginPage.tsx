@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../components/Auth.scss';
@@ -8,9 +8,19 @@ interface LoginResponse {
 }
 
 export default function LoginPage() {
-  const [form, setForm] = useState({ username: '', password: '' });
+  const [form, setForm] = useState({
+    username: '',
+    password: ''
+  });
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const token = localStorage.getItem('token');
+
+  useEffect(() => {
+    if (token) {
+      navigate('/HomePage');
+    }
+  }, [token, navigate]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -43,10 +53,6 @@ export default function LoginPage() {
         <button type="submit">Login</button>
       </form>
       {error && <p className="error">{error}</p>}
-      <div className="auth-alt-action">
-        <span>Don&#39;t have an account?</span>
-        <button onClick={() => navigate('/register')}>Register</button>
-      </div>
     </div>
   );
 }
