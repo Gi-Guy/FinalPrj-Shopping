@@ -55,7 +55,7 @@ export default function StorePage() {
       })
       .catch(err => console.error('Error loading categories:', err));
 
-    axios.get(`${import.meta.env.VITE_API_URL}/api/products/shop/${slug}`)
+    axios.get(`${import.meta.env.VITE_API_URL}/api/products/shop/${slug}/products`)
       .then(res => {
         if (Array.isArray(res.data)) setProducts(res.data as Product[]);
         else console.error('Products response is not an array:', res.data);
@@ -95,7 +95,7 @@ export default function StorePage() {
         seller_id: 1,
       };
 
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/products/${slug}/products`, productData);
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/products`, productData);
       setProducts([...products, res.data as Product]);
     } catch (err) {
       console.error('Error adding product:', err);
