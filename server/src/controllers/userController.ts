@@ -10,6 +10,7 @@ import {
   getShopByUserId,
   updateUserPassword
 } from '../models/userModel';
+import { AuthenticatedRequest } from '../middleware/authMiddleware';
 
 export async function handleCreateUser(req: Request, res: Response) {
   const {
@@ -144,11 +145,26 @@ export async function handleUpdateUserPassword(req: Request, res: Response) {
     res.status(500).json({ error: 'Server error' });
   }
 }
-export async function handleGetUserById(req: Request, res: Response) {
-  const { id } = req.params;
+// export async function handleGetUserById(req: Request, res: Response) {
+//   const { id } = req.params;
+
+//   try {
+//     const user = await findUserById(Number(id));
+//     if (!user) return res.status(404).json({ error: 'User not found' });
+//     res.json(user);
+//   } catch (err) {
+//     console.error('Error fetching user:', err);
+//     res.status(500).json({ error: 'Server error' });
+//   }
+// }
+export async function handleGetUserById(req: AuthenticatedRequest, res: Response) {
+  console.log('req.user:', req.user);
+  const userId = req.user?.userId;
+
+  if (!userId) return res.status(401).json({ error: 'Unauthorized' });
 
   try {
-    const user = await findUserById(Number(id));
+    const user = await findUserById(userId);
     if (!user) return res.status(404).json({ error: 'User not found' });
 
     res.json(user);
