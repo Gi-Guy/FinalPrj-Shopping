@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import '../scss/StorePage.css';
+import '../scss/StorePage.scss';
 
 interface Shop {
   id: number;
@@ -240,3 +240,6 @@ export default function StorePage() {
     </div>
   );
 }
+
+
+
