@@ -1,138 +1,66 @@
 .store-page {
-  background-color: #2e2e2e;
-  color: #ffffff;
   padding: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #1e1e1e;
+  color: #fff;
 
-  h2 {
-    font-size: 2rem;
-    margin-bottom: 1.5rem;
-    text-align: center;
-    color: #ffffff;
+  h2, h3, h4 {
+    color: #fff;
   }
 
   section {
     margin-top: 2rem;
     padding: 1.5rem;
-    background: #3a3a3a;
+    background-color: #2e2e2e !important; // Darker card background
     border-radius: 12px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  }
+    color: #fff;
 
-  h4 {
-    font-size: 1.4rem;
-    margin-bottom: 1rem;
-    border-bottom: 2px solid #555;
-    padding-bottom: 0.5rem;
-    color: #ffffff;
-  }
-
-  input,
-  select {
-    padding: 0.5rem;
-    margin: 0.3rem 0.5rem 0.8rem 0;
-    border: 1px solid #555;
-    border-radius: 8px;
-    background-color: #2e2e2e;
-    color: #ffffff;
-    width: 100%;
-    max-width: 300px;
-    display: block;
-  }
-
-  input[type="file"] {
-    padding: 0.2rem;
-    border: none;
-    color: #ffffff;
-  }
-
-  button {
-    padding: 0.5rem 1rem;
-    background-color: #0072e4;
-    color: #ffffff;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    margin: 0.5rem 0.5rem 1rem 0;
-
-    &:hover {
-      background-color: #005ec2;
-    }
-
-    &.danger {
-      background-color: #d93025;
-
-      &:hover {
-        background-color: #c5221f;
-      }
-    }
-
-    &.secondary {
-      background-color: #666;
-
-      &:hover {
-        background-color: #444;
-      }
-    }
-  }
-
-  ul {
-    list-style: none;
-    padding: 0;
-    margin: 1rem 0;
-
-    li {
-      padding: 0.6rem 0;
-      border-bottom: 1px solid #555;
-      display: flex;
-      flex-direction: column;
-
-      @media (min-width: 600px) {
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-      }
-
-      div {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-      }
-
-      button {
-        margin-top: 0.4rem;
-        @media (min-width: 600px) {
-          margin-top: 0;
-        }
-      }
-    }
-  }
-
-  .edit-form,
-  .add-form {
-    margin-top: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.7rem;
-
-    @media (min-width: 600px) {
-      flex-direction: row;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-  }
-
-  .store-header {
-    background-color: #383838;
-    padding: 1.5rem;
-    border-radius: 10px;
-    margin-bottom: 2rem;
-
-    h3,
-    p {
+    h4 {
       color: #ffffff;
+      border-bottom: 1px solid #555;
+      padding-bottom: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+
+      li {
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #555;
+        color: #fff;
+      }
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      margin-bottom: 0.5rem;
+      padding: 0.5rem;
+      border-radius: 6px;
+      background-color: #2e2e2e !important;
+      color: #fff;
+      border: 1px solid #666;
+
+      &::placeholder {
+        color: #bbb;
+      }
+    }
+
+    button {
+      margin-right: 0.5rem;
+      padding: 0.5rem 1rem;
+      background-color: #0072e4;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #005ec2;
+      }
     }
   }
 }
