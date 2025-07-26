@@ -10,9 +10,11 @@ import {
   handleGetUserById
 } from '../controllers/userController';
 import { handleRegister } from '../controllers/authController';
-import { authenticateToken, AuthenticatedRequest } from '../middleware/authMiddleware';
+import { authenticateToken } from '../middleware/authMiddleware';
 
 const router = express.Router();
+
+router.get('/me', authenticateToken, handleGetUserById);
 
 router.post('/', handleRegister);
 router.put('/:id', handleUpdateUser);
@@ -21,7 +23,5 @@ router.patch('/:id/login', handleUpdateLastLogin);
 router.patch('/:id/deactivate', handleDeactivateUser);
 router.get('/:id/shop', handleGetShopByUserId);
 router.patch('/:id/password', handleUpdateUserPassword);
-
-router.get('/me', authenticateToken, handleGetUserById);
 
 export default router;
