@@ -1,125 +1,111 @@
 import React, { useEffect, useState } from 'react';
-import './UserProfile.scss';
-import { useNavigate } from 'react-router-dom';
 
-interface User {
+type User = {
+  id: number;
   name: string;
   email: string;
   location: string;
   bio: string;
   avatar: string;
-}
+};
 
 export default function UserProfile() {
   const [user, setUser] = useState<User | null>(null);
-  const [tempUser, setTempUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [editMode, setEditMode] = useState(false);
-  const navigate = useNavigate();
+  const [form, setForm] = useState<Omit<User, 'id'>>({
+    name: '',
+    email: '',
+    location: '',
+    bio: '',
+    avatar: '',
+  });
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL}/api/user/1`)
-      .then(res => res.json())
-      .then(data => {
-        setUser(data);
-        setTempUser(data);
-      });
+    const storedUser = localStorage.getItem('user');
+    if (!storedUser) {
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const { id } = JSON.parse(storedUser);
+      fetch(`${import.meta.env.VITE_API_BASE_URL}/api/user/${id}`)
+        .then(res => res.json())
+        .then((data: User) => {
+          setUser(data);
+          setForm({
+            name: data.name,
+            email: data.email,
+            location: data.location,
+            bio: data.bio,
+            avatar: data.avatar,
+          });
+          setIsLoading(false);
+        })
+        .catch(() => {
+          setUser(null);
+          setIsLoading(false);
+        });
+    } catch {
+      setUser(null);
+      setIsLoading(false);
+    }
   }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    if (!tempUser) return;
-    setTempUser(prev => ({ ...prev!, [name]: value }));
+    setForm(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setTempUser(prev => ({ ...prev!, avatar: reader.result as string }));
-    };
-    reader.readAsDataURL(file);
-  };
-
-  const handleSave = () => {
-    if (!tempUser) return;
-    fetch(`${import.meta.env.VITE_API_URL}/api/user/1`, {
+  const handleSave = async () => {
+    if (!user) return;
+    const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/user/${user.id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(tempUser),
-    })
-      .then(res => res.json())
-      .then(data => {
-        setUser(data);
-        setTempUser(data);
-        setEditMode(false);
-      });
-  };
+      body: JSON.stringify(form),
+    });
 
-  const handleCancel = () => {
-    setTempUser(user);
+    const updatedUser: User = await res.json();
+    setUser(updatedUser);
+    localStorage.setItem('user', JSON.stringify(updatedUser));
     setEditMode(false);
   };
 
-  const handleCreatePost = () => {
-    navigate('/create-post');
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    setUser(null);
   };
 
-  if (!user || !tempUser) return <div className="profile-container">Loading...</div>;
+  if (isLoading) return <div>Loading...</div>;
+
+  if (!user) return <div>No user connected. Please log in!</div>;
 
   return (
-    <div className="profile-container">
-      <div className="profile-card">
-        <img src={tempUser.avatar} alt="User Avatar" className="avatar" />
+    <div className="user-profile">
+      <h2>User Profile</h2>
 
-        {editMode ? (
-          <>
-            <input type="file" accept="image/*" onChange={handleAvatarChange} />
+      {editMode ? (
+        <div className="form">
+          <input name="name" value={form.name} onChange={handleChange} />
+          <input name="email" value={form.email} onChange={handleChange} />
+          <input name="location" value={form.location} onChange={handleChange} />
+          <input name="bio" value={form.bio} onChange={handleChange} />
+          <input name="avatar" value={form.avatar} onChange={handleChange} />
+          <button onClick={handleSave}>Save</button>
+        </div>
+      ) : (
+        <div className="info">
+          <p><strong>Name:</strong> {user.name}</p>
+          <p><strong>Email:</strong> {user.email}</p>
+          <p><strong>Location:</strong> {user.location}</p>
+          <p><strong>Bio:</strong> {user.bio}</p>
+          <img src={user.avatar} alt="Avatar" width="100" />
+          <button onClick={() => setEditMode(true)}>Edit</button>
+        </div>
+      )}
 
-            <input
-              type="text"
-              name="name"
-              value={tempUser.name}
-              onChange={handleChange}
-              placeholder="Name"
-            />
-            <input
-              type="email"
-              name="email"
-              value={tempUser.email}
-              onChange={handleChange}
-              placeholder="Email"
-            />
-            <input
-              type="text"
-              name="location"
-              value={tempUser.location}
-              onChange={handleChange}
-              placeholder="Location"
-            />
-            <textarea
-              name="bio"
-              value={tempUser.bio}
-              onChange={handleChange}
-              placeholder="Bio"
-            />
-            <div className="button-group">
-              <button onClick={handleSave}>💾 Save</button>
-              <button onClick={handleCancel}>✖ Cancel</button>
-            </div>
-          </>
-        ) : (
-          <>
-            <h2>{user.name}</h2>
-            <p><strong>Email:</strong> {user.email}</p>
-            <p><strong>Location:</strong> {user.location}</p>
-            <p className="bio">{user.bio}</p>
-            <button onClick={() => setEditMode(true)}>✏ Edit</button>
-            <button onClick={handleCreatePost}>📝 Create Post</button>
-          </>
-        )}
-      </div>
+      <button onClick={handleLogout}>Logout</button>
     </div>
   );
 }
