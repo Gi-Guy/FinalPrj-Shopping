@@ -1,5 +1,4 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Input from '../components/Input';
 import TextArea from '../components/TextArea';
 import Button from '../components/Button';
@@ -10,7 +9,8 @@ export default function CreateShopForm() {
     name: '',
     description: '',
     location: '',
-    workingHours: ''
+    workingHours: '',
+    ownerId: 0, // ✅ Added ownerId
   });
 
   const [status, setStatus] = useState('');
@@ -18,7 +18,27 @@ export default function CreateShopForm() {
 
   useEffect(() => {
     const savedToken = localStorage.getItem('token');
-    if (savedToken) setToken(savedToken);
+    if (!savedToken) return;
+
+    setToken(savedToken);
+
+    // ✅ Fetch user to get ownerId
+    fetch(`${import.meta.env.VITE_API_URL}/api/users/me`, {
+      headers: {
+        Authorization: `Bearer ${savedToken}`,
+      },
+    })
+      .then(res => {
+        if (!res.ok) throw new Error('Unauthorized');
+        return res.json();
+      })
+      .then(data => {
+        setForm(prev => ({ ...prev, ownerId: data.id }));
+      })
+      .catch(err => {
+        console.error('Failed to fetch user:', err);
+        setStatus('error');
+      });
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -35,9 +55,9 @@ export default function CreateShopForm() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify(form)
+        body: JSON.stringify(form),
       });
 
       if (!res.ok) {
@@ -62,9 +82,10 @@ export default function CreateShopForm() {
         <TextArea name="description" placeholder="Description" value={form.description} onChange={handleChange} />
         <Input name="location" placeholder="Location" value={form.location} onChange={handleChange} />
         <Input name="workingHours" placeholder="Working Hours" value={form.workingHours} onChange={handleChange} />
-        <Button type="submit">Create</Button>
+        <Button type="submit" disabled={!form.ownerId || status === 'loading'}>
+          {status === 'loading' ? 'Creating...' : 'Create'}
+        </Button>
       </form>
-      {status === 'loading' && <p>Creating shop...</p>}
       {status === 'success' && <p>✅ Shop created successfully</p>}
       {status === 'error' && <p>❌ Error creating shop</p>}
     </main>
