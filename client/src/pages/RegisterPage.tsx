@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../components/Auth.scss';
@@ -20,13 +20,6 @@ export default function RegisterPage() {
   });
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  const token = localStorage.getItem('token');
-
-  useEffect(() => {
-    if (token) {
-      navigate('/profile');
-    }
-  }, [token, navigate]);
 
   const getPasswordStrength = (password: string) => {
     if (password.length < 6) return 'Weak';
@@ -53,13 +46,19 @@ export default function RegisterPage() {
         phone: form.phone,
         is_seller: form.userType === 'seller'
       };
+
       const res = await axios.post<RegisterResponse>(`${import.meta.env.VITE_API_URL}/api/users`, payload);
+      console.log('📝 Register response:', res.data);
       localStorage.setItem('token', res.data.token);
       navigate('/');
-    } catch (err) {
-      if (err && typeof err === 'object' && 'response' in err) {
-        const axiosErr = err as { response?: { data?: { message?: string } } };
-        setError(axiosErr.response?.data?.message || 'Registration failed');
+    } catch (err: unknown) {
+      if (
+        typeof err === 'object' &&
+        err !== null &&
+        'response' in err &&
+        typeof (err as { response?: { data?: { message?: unknown } } }).response?.data?.message === 'string'
+      ) {
+        setError((err as { response: { data: { message: string } } }).response.data.message);
       } else {
         setError('Unexpected error occurred');
       }
