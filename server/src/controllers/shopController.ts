@@ -58,3 +58,6 @@ export async function handleCreateShop(req: AuthenticatedRequest, res: Response)
     res.status(500).json({ error: 'Server error' });
   }
 }
+
+
+
