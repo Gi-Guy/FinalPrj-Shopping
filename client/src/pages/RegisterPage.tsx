@@ -59,7 +59,7 @@ export default function RegisterPage() {
       localStorage.setItem('token', res.data.token);
       navigate('/');
     } catch (err: unknown) {
-      interface AxiosErrorResponse {
+      interface AxiosError {
         response?: {
           data?: {
             message?: string;
@@ -70,9 +70,9 @@ export default function RegisterPage() {
         typeof err === 'object' &&
         err !== null &&
         'response' in err &&
-        typeof (err as AxiosErrorResponse).response?.data?.message === 'string'
+        typeof (err as AxiosError).response?.data?.message === 'string'
       ) {
-        setError((err as AxiosErrorResponse).response!.data!.message!);
+        setError((err as AxiosError).response!.data!.message!);
       } else {
         setError('Unexpected error occurred');
       }

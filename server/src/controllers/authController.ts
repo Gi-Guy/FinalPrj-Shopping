@@ -35,12 +35,13 @@ export async function handleRegister(req: Request, res: Response) {
       is_seller
     });
 
-    res.status(201).json({ message: 'User created' });
+    const token = jwt.sign({ userId: user.id }, JWT_SECRET as string, { expiresIn: '24h' });
+
+    res.status(201).json({ token });
   } catch (err) {
     res.status(500).json({ message: 'Registration failed', error: err });
   }
 }
-
 export async function handleLogin(req: Request, res: Response) {
   try {
     const { username, password } = req.body;
