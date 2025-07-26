@@ -23,7 +23,8 @@ export async function handleRegister(req: Request, res: Response) {
     if (existing) return res.status(400).json({ message: 'Username already taken' });
 
     const hashedPassword = await bcrypt.hash(password_hash, 10);
-
+    console.log('❌❌ Payload received in register:', req.body);
+    
     const user = await createUser({
       username,
       email,

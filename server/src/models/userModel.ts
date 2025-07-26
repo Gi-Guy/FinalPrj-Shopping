@@ -26,7 +26,7 @@ interface UpdateUserInput {
 export async function createUser(user: CreateUserInput) {
   const {
     username, email, first_name, last_name,
-    password_hash, gender, phone, shop_id,is_seller
+    password_hash, gender, phone, shop_id, is_seller
   } = user;
 
   const result = await db.query(
