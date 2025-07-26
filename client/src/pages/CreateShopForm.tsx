@@ -10,7 +10,6 @@ export default function CreateShopForm() {
     description: '',
     location: '',
     workingHours: '',
-    owner_id: 0, // backend expects snake_case
   });
 
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
@@ -18,27 +17,9 @@ export default function CreateShopForm() {
 
   useEffect(() => {
     const savedToken = localStorage.getItem('token');
-    if (!savedToken) return;
-
-    setToken(savedToken);
-
-    // Fetch user info to get owner_id
-    fetch(`${import.meta.env.VITE_API_URL}/api/users/me`, {
-      headers: {
-        Authorization: `Bearer ${savedToken}`,
-      },
-    })
-      .then(res => {
-        if (!res.ok) throw new Error('Unauthorized');
-        return res.json();
-      })
-      .then(user => {
-        setForm(prev => ({ ...prev, owner_id: user.id }));
-      })
-      .catch(err => {
-        console.error('Failed to get user info:', err);
-        localStorage.removeItem('token');
-      });
+    if (savedToken) {
+      setToken(savedToken);
+    }
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -57,7 +38,7 @@ export default function CreateShopForm() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(form),
+        body: JSON.stringify(form), // no owner_id sent here
       });
 
       if (!res.ok) {
@@ -69,13 +50,12 @@ export default function CreateShopForm() {
       setStatus('success');
       console.log('Created shop:', data);
 
-      // Optional: reset form
+      // Reset form
       setForm({
         name: '',
         description: '',
         location: '',
         workingHours: '',
-        owner_id: form.owner_id,
       });
     } catch (err) {
       console.error('Create shop error:', err);
