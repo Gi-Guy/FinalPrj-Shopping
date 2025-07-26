@@ -17,7 +17,7 @@ export default function UserProfile() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch('http://localhost:3001/api/user/1')
+    fetch(`${import.meta.env.VITE_API_URL}/api/user/1`)
       .then(res => res.json())
       .then(data => {
         setUser(data);
@@ -44,7 +44,7 @@ export default function UserProfile() {
 
   const handleSave = () => {
     if (!tempUser) return;
-    fetch('http://localhost:3001/api/user/1', {
+    fetch(`${import.meta.env.VITE_API_URL}/api/user/1`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(tempUser),
