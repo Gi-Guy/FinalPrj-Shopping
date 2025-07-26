@@ -40,8 +40,20 @@ export async function createUser(user: CreateUserInput) {
   return result.rows[0];
 }
 
+// export async function findUserById(id: number) {
+//   const result = await db.query(`SELECT * FROM users WHERE id = $1`, [id]);
+//   return result.rows[0] || null;
+// }
 export async function findUserById(id: number) {
-  const result = await db.query(`SELECT * FROM users WHERE id = $1`, [id]);
+  const result = await db.query(`
+    SELECT 
+      u.*, 
+      CASE WHEN u.is_seller THEN s.slug ELSE NULL END AS shop_slug
+    FROM users u
+    LEFT JOIN shops s ON s.owner_id = u.id
+    WHERE u.id = $1
+  `, [id]);
+
   return result.rows[0] || null;
 }
 

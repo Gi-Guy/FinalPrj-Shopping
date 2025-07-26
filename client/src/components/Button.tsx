@@ -1,3 +1,5 @@
+import React from 'react';
+
 type ButtonProps = {
   type?: "button" | "submit" | "reset";
   children: React.ReactNode;
