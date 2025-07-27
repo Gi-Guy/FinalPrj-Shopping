@@ -16,29 +16,40 @@ import 'stream-chat-react/dist/css/v2/index.css';
 const apiKey = import.meta.env.VITE_STREAM_API_KEY!;
 const chatClient = StreamChat.getInstance(apiKey);
 
+
+const apiBase = import.meta.env.VITE_API_BASE || 'http://localhost:3001';
+
 const ChatStream = () => {
   const [isReady, setIsReady] = useState(false);
   const currentUserId = localStorage.getItem('userId') || 'guest-user';
 
   useEffect(() => {
     const connectUser = async () => {
-      const res = await fetch('http://localhost:3001/api/stream/token', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: currentUserId }),
-      });
+      try {
+        const res = await fetch(`${apiBase}/api/stream/token`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId: currentUserId }),
+        });
 
-      const { token } = await res.json();
+        if (!res.ok) {
+          throw new Error('Failed to fetch Stream token');
+        }
 
-      await chatClient.connectUser(
-        {
-          id: currentUserId,
-          name: 'Dima',
-        },
-        token
-      );
+        const { token } = await res.json();
 
-      setIsReady(true);
+        await chatClient.connectUser(
+          {
+            id: currentUserId,
+            name: 'Dima',
+          },
+          token
+        );
+
+        setIsReady(true);
+      } catch (err) {
+        console.error('❌ Stream connection error:', err);
+      }
     };
 
     connectUser();
