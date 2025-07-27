@@ -14,8 +14,9 @@ import type { ChannelFilters, ChannelSort } from 'stream-chat';
 import 'stream-chat-react/dist/css/v2/index.css';
 
 const apiKey = import.meta.env.VITE_STREAM_API_KEY!;
-const chatClient = StreamChat.getInstance(apiKey);
+console.log('✅ VITE_STREAM_API_KEY:', apiKey); 
 
+const chatClient = StreamChat.getInstance(apiKey);
 
 const apiBase = import.meta.env.VITE_API_BASE || 'http://localhost:3001';
 
