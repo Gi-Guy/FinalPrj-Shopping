@@ -1,20 +1,20 @@
-import { Router, Request, Response } from 'express';
+import express from 'express';
 import { StreamChat } from 'stream-chat';
 
-const router = Router();
+const router = express.Router();
 
 const apiKey = process.env.STREAM_API_KEY!;
 const apiSecret = process.env.STREAM_API_SECRET!;
-const serverClient = StreamChat.getInstance(apiKey, apiSecret);
+const chatServerClient = StreamChat.getInstance(apiKey, apiSecret);
 
-router.post('/token', (req: Request, res: Response) => {
+router.post('/token', (req, res) => {
   const { userId } = req.body;
 
   if (!userId) {
-    return res.status(400).json({ error: 'Missing userId' });
+    return res.status(400).json({ error: 'userId is required' });
   }
 
-  const token = serverClient.createToken(userId);
+  const token = chatServerClient.createToken(userId);
   return res.json({ token });
 });
 
