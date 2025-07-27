@@ -1,14 +1,19 @@
-import app from './app';
-import pool from './db';
+import express from 'express';
 import dotenv from 'dotenv';
+import pool from './db';
+import app from './app'; 
+import streamRoutes from './routers/stream'; 
 
 dotenv.config({ path: './src/.env' });
 
 const PORT = process.env.PORT || 3001;
 
+app.use(express.json());
+app.use('/api/stream', streamRoutes);
+
 async function startServer() {
   try {
-    await pool.query('SELECT 1'); 
+    await pool.query('SELECT 1');
     console.log('🟢 Connected to PostgreSQL');
 
     app.listen(PORT, () => {
