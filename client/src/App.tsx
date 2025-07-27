@@ -1,43 +1,47 @@
 import React, { useEffect, useState } from 'react';
-import { AppRouter } from './router';
-
+import {
+  Chat,
+  Channel,
+  ChannelHeader,
+  ChannelList,
+  MessageInput,
+  MessageList,
+  Thread,
+  Window,
+} from 'stream-chat-react';
 import { StreamChat } from 'stream-chat';
-import { Chat } from 'stream-chat-react';
-import 'stream-chat-react/dist/css/v2/index.css'; 
+import type { ChannelFilters, ChannelSort } from 'stream-chat';
+import 'stream-chat-react/dist/css/v2/index.css';
 
-const apiKey = 'YOUR_STREAM_API_KEY';
+const apiKey = '2jvhcbctfs5y'; 
 const chatClient = StreamChat.getInstance(apiKey);
 
-function App() {
+const ChatPage = () => {
   const [isReady, setIsReady] = useState(false);
-  const currentUserId = 'user-id-from-auth'; // You can pull this from context or localStorage
+  const currentUserId = 'your_user_id_here'; 
 
   useEffect(() => {
-    async function connectChatUser() {
-      try {
-        const res = await fetch('http://localhost:3001/api/stream/token', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ userId: currentUserId }),
-        });
+    const connectUser = async () => {
+      const res = await fetch('http://localhost:3001/api/stream/token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: currentUserId }),
+      });
 
-        const { token } = await res.json();
+      const { token } = await res.json();
 
-        await chatClient.connectUser(
-          {
-            id: currentUserId,
-            name: 'Dima', 
-          },
-          token
-        );
+      await chatClient.connectUser(
+        {
+          id: currentUserId,
+          name: 'Dima',
+        },
+        token
+      );
 
-        setIsReady(true);
-      } catch (err) {
-        console.error('Failed to connect to Stream Chat:', err);
-      }
-    }
+      setIsReady(true);
+    };
 
-    connectChatUser();
+    connectUser();
 
     return () => {
       chatClient.disconnectUser();
@@ -46,11 +50,30 @@ function App() {
 
   if (!isReady) return <div>Loading chat...</div>;
 
+  const filters: ChannelFilters = {
+    type: 'messaging',
+    members: { $in: [currentUserId] },
+  };
+
+  const sort: ChannelSort = {
+    last_message_at: -1,
+  };
+
   return (
     <Chat client={chatClient} theme="str-chat__theme-light">
-      <AppRouter />
+      <div style={{ display: 'flex', height: '100vh' }}>
+        <ChannelList filters={filters} sort={sort} />
+        <Channel>
+          <Window>
+            <ChannelHeader />
+            <MessageList />
+            <MessageInput />
+          </Window>
+          <Thread />
+        </Channel>
+      </div>
     </Chat>
   );
-}
+};
 
-export default App;
+export default ChatPage;
