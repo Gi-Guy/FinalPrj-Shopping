@@ -1,15 +1,16 @@
 import express from 'express';
 import cors from 'cors';
-import pool from './db'; 
+import pool from './db';
 import path from 'path';
 
 import shopRoutes from './routers/shops';
 import categoryRoutes from './routers/categories';
 import userRoutes from './routers/users';
 import productRoutes from './routers/products';
-import messageRoutes from './routers/messages'; 
+import messageRoutes from './routers/messages';
 import authRoutes from './routers/auth';
 import uploadRoutes from './routers/upload';
+import streamRoutes from './routers/stream';
 
 const app = express();
 
@@ -21,21 +22,22 @@ app.use('/api/shops', shopRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
-app.use('/api/messages', messageRoutes); 
+app.use('/api/messages', messageRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/upload', uploadRoutes);
-app.use('/api/products', productRoutes);
-// health check endpoint for testing only
+app.use('/api/stream', streamRoutes); 
+
+
 app.get('/api/health', (_, res) => {
   res.send({ status: 'OK' });
 });
 
-// Testing endpoint
+
 app.get('/api/ping', (_, res) => {
   res.json({ message: 'Backend is connected ✅' });
 });
 
-// ✅ Get user by ID
+
 app.get('/api/user/:id', async (req, res) => {
   const { id } = req.params;
   try {
@@ -50,7 +52,7 @@ app.get('/api/user/:id', async (req, res) => {
   }
 });
 
-// ✅ Update user by ID
+
 app.put('/api/user/:id', async (req, res) => {
   const { id } = req.params;
   const { name, email, location, bio, avatar } = req.body;
