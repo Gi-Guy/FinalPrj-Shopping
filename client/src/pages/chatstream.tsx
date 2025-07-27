@@ -13,12 +13,12 @@ import { StreamChat } from 'stream-chat';
 import type { ChannelFilters, ChannelSort } from 'stream-chat';
 import 'stream-chat-react/dist/css/v2/index.css';
 
-const apiKey = 'YOUR_STREAM_API_KEY'; // Replace with your real key
+const apiKey = import.meta.env.VITE_STREAM_API_KEY!;
 const chatClient = StreamChat.getInstance(apiKey);
 
-const ChatPage = () => {
+const ChatStream = () => {
   const [isReady, setIsReady] = useState(false);
-  const currentUserId = 'your_user_id_here'; // Replace with dynamic user ID if needed
+  const currentUserId = localStorage.getItem('userId') || 'guest-user';
 
   useEffect(() => {
     const connectUser = async () => {
@@ -33,7 +33,7 @@ const ChatPage = () => {
       await chatClient.connectUser(
         {
           id: currentUserId,
-          name: 'Dima', // Optional display name
+          name: 'Dima',
         },
         token
       );
@@ -46,7 +46,7 @@ const ChatPage = () => {
     return () => {
       chatClient.disconnectUser();
     };
-  }, []);
+  }, [currentUserId]);
 
   if (!isReady) return <div>Loading chat...</div>;
 
@@ -55,10 +55,9 @@ const ChatPage = () => {
     members: { $in: [currentUserId] },
   };
 
-const sort: ChannelSort = {
-  last_message_at: -1, 
-
-};
+  const sort: ChannelSort = {
+    last_message_at: -1,
+  };
 
   return (
     <Chat client={chatClient} theme="str-chat__theme-light">
@@ -77,4 +76,4 @@ const sort: ChannelSort = {
   );
 };
 
-export default ChatPage;
+export default ChatStream;
