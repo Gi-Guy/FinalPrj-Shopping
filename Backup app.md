@@ -33,3 +33,6 @@
 // }
 
 // export default App
+
+
+// VITE_API_URL=https://finalprj-shopping-server.onrender.com
