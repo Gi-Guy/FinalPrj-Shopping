@@ -51,11 +51,10 @@ export default function Layout() {
         <NavLink to="/profile">User Profile</NavLink>
         <NavLink to="/create-shop">Create Shop</NavLink>
         <NavLink to="/create-category">Create Category</NavLink>
-        <NavLink to="/chatsteam">Chat</NavLink> 
+        <NavLink to="/chat">Chat</NavLink> {}
         {user?.shop_slug && (
           <NavLink to={`/store/${user.shop_slug}`}>My Store</NavLink>
         )}
-
       </nav>
 
       <main className="main-content">
